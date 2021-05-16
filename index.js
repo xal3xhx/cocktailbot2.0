@@ -2,7 +2,14 @@
 // Node version, if it isn't it will throw the following error to inform
 // you.
 if (Number(process.version.slice(1).split(".")[0]) < 12) throw new Error("Node 12.0.0 or higher is required. Update Node on your system.");
-
+var npid = require('npid');
+try {
+    var pid = npid.create('/var/run/cocktailbot2.pid', true);
+    pid.removeOnExit();
+} catch (err) {
+    console.log(err);
+    process.exit(1);
+}
 // Load up the discord.js library
 const Discord = require("discord.js");
 // We also load the rest of the things we need in this file:
