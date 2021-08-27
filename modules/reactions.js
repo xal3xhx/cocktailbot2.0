@@ -14,19 +14,10 @@ module.exports = (client) => {
 		}
 	}
 	const settings = client.getSettings(reaction.message.channel.guild);
-	if(reaction.message.channel.id != settings.cocktailchannelID) return;
 	if(user.id === client.user.id) return
-	// code here
-	if(reaction._emoji.name == "👍") {
-		upvotes = await client.getUpvotes(reaction.message.id, reaction.message.channel.guild.id)
-		if(!upvotes[0]) return;
-		await client.updateUpVote(upvotes[0].up_vote + 1, reaction.message.id, reaction.message.channel.guild.id)
-	}
-	if(reaction._emoji.name == "👎") {
-		downvotes = await client.getDownvotes(reaction.message.id, reaction.message.channel.guild.id)
-		if(!downvotes[0]) return;
-		await client.updateDownVote(downvotes[0].downvote + 1, reaction.message.id, reaction.message.channel.guild.id)
-	}
+	if(reaction.message.channel.id === settings.cocktailchannelID) await cocktail_reaction_add(settings, reaction, user);
+	if(reaction.message.id === settings.VictumMessageID) await victum_reaction_add(settings, reaction, user);
+	if(reaction.message.id === settings.MovieMessageID) await movie_reaction_add(settings, reaction, user);
 	console.log(`user: ${user.username} reacted to a message with the emoji ${reaction._emoji.name}`)
   });
 
@@ -45,19 +36,70 @@ module.exports = (client) => {
 		}
 	}
 	const settings = client.getSettings(reaction.message.channel.guild);
-	if(reaction.message.channel.id != settings.cocktailchannelID) return;
 	if(user.id === client.user.id) return
-	// code here
-	if(reaction._emoji.name == "👍") {
-		upvotes = await client.getUpvotes(reaction.message.id, reaction.message.channel.guild.id)
-		if(!upvotes[0]) return;
-		await client.updateUpVote(upvotes[0].up_vote - 1, reaction.message.id, reaction.message.channel.guild.id)
-	}
-	if(reaction._emoji.name == "👎") {
-		downvotes = await client.getDownvotes(reaction.message.id, reaction.message.channel.guild.id)
-		if(!downvotes[0]) return;
-		await client.updateDownVote(downvotes[0].downvote - 1, reaction.message.id, reaction.message.channel.guild.id)
-	}
+	if(reaction.message.channel.id === settings.cocktailchannelID) cocktail_reaction_remove(settings, reaction, user);
+	if(reaction.message.id === settings.VictumMessageID) await victum_reaction_remove(settings, reaction, user);
+	if(reaction.message.id === settings.MovieMessageID) await movie_reaction_remove(settings, reaction, user);
 	console.log(`user: ${user.username} removed the reaction ${reaction._emoji.name} from a message.`)
   });
+
+
+	async function movie_reaction_add(settings, reaction, userr) {
+		if(reaction._emoji.name == "🎥") {
+			var role = reaction.message.channel.guild.roles.cache.find(role => role.id === settings.MovieRoleID)
+			var member = reaction.message.channel.guild.members.cache.find(user => user.id === userr.id)
+			member.roles.add(role).catch(console.error);
+		}
+	}
+
+	async function movie_reaction_remove(settings, reaction, userr) {
+		if(reaction._emoji.name == "🎥") {
+			var role = reaction.message.channel.guild.roles.cache.find(role => role.id === settings.MovieRoleID)
+			var member = reaction.message.channel.guild.members.cache.find(user => user.id === userr.id)
+			member.roles.remove(role).catch(console.error);
+		}
+	}
+
+	async function victum_reaction_add(settings, reaction, userr) {
+		if(reaction._emoji.name == "👀") {
+			var role = reaction.message.channel.guild.roles.cache.find(role => role.id === settings.VictumRoleID)
+			var member = reaction.message.channel.guild.members.cache.find(user => user.id === userr.id)
+			member.roles.add(role).catch(console.error);
+		}
+	}
+
+	async function victum_reaction_remove(settings, reaction, userr) {
+		if(reaction._emoji.name == "👀") {
+			var role = reaction.message.channel.guild.roles.cache.find(role => role.id === settings.VictumRoleID)
+			var member = reaction.message.channel.guild.members.cache.find(user => user.id === userr.id)
+			member.roles.remove(role).catch(console.error);	
+		}
+	}
+
+	async function cocktail_reaction_add(settings, reaction, userr) {
+		if(reaction._emoji.name == "👍") {
+			upvotes = await client.getUpvotes(reaction.message.id, reaction.message.channel.guild.id)
+			if(!upvotes[0]) return;
+			await client.updateUpVote(upvotes[0].up_vote + 1, reaction.message.id, reaction.message.channel.guild.id)
+		}
+		if(reaction._emoji.name == "👎") {
+			downvotes = await client.getDownvotes(reaction.message.id, reaction.message.channel.guild.id)
+			if(!downvotes[0]) return;
+			await client.updateDownVote(downvotes[0].downvote + 1, reaction.message.id, reaction.message.channel.guild.id)
+		}
+	}
+
+	async function cocktail_reaction_remove(settings, reaction, userr) {
+		if(reaction._emoji.name == "👍") {
+			upvotes = await client.getUpvotes(reaction.message.id, reaction.message.channel.guild.id)
+			if(!upvotes[0]) return;
+			await client.updateUpVote(upvotes[0].up_vote - 1, reaction.message.id, reaction.message.channel.guild.id)
+		}
+		if(reaction._emoji.name == "👎") {
+			downvotes = await client.getDownvotes(reaction.message.id, reaction.message.channel.guild.id)
+			if(!downvotes[0]) return;
+			await client.updateDownVote(downvotes[0].downvote - 1, reaction.message.id, reaction.message.channel.guild.id)
+		}
+	}
+
 }

@@ -7,7 +7,13 @@ let baseConfig = fs.readFileSync("./config_base.txt", "utf8");
 const defaultSettings = {
     "prefix": "~",
     "cocktailchannelID": "840334813906337882",
-    "bonker": "bonker"
+    "hornyjailchannelID": "840334813906337882", 
+    "eventchannelID": "824742922641473587",
+    "VictumMessageID": "852668565235564584",
+    "MovieMessageID": "000",
+    "VictumRoleID": "852660279544381480",
+    "MovieRoleID": "863433413569544213",
+    "bonker": "bonker",
 };
 
 const settings = new Enmap({
