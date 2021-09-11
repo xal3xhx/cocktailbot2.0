@@ -8,7 +8,7 @@ module.exports = (client) => {
 		try {
 			await reaction.fetch();
 		} catch (error) {
-			console.error('Something went wrong when fetching the message: ', error);
+			client.logger.error(`something went wrong while trying to fetch the message!`)
 			// Return as `reaction.message.author` may be undefined/null
 			return;
 		}
@@ -18,7 +18,7 @@ module.exports = (client) => {
 	if(reaction.message.channel.id === settings.cocktailchannelID) await cocktail_reaction_add(settings, reaction, user);
 	if(reaction.message.id === settings.VictumMessageID) await victum_reaction_add(settings, reaction, user);
 	if(reaction.message.id === settings.MovieMessageID) await movie_reaction_add(settings, reaction, user);
-	console.log(`user: ${user.username} reacted to a message with the emoji ${reaction._emoji.name}`)
+	client.logger.log(`user: ${user.username} reacted to a message with the emoji ${reaction._emoji.name}`)
   });
 
 
@@ -30,7 +30,7 @@ module.exports = (client) => {
 		try {
 			await reaction.fetch();
 		} catch (error) {
-			console.error('Something went wrong when fetching the message: ', error);
+			client.logger.error(`something went wrong while trying to fetch the message!`)
 			// Return as `reaction.message.author` may be undefined/null
 			return;
 		}
@@ -40,7 +40,7 @@ module.exports = (client) => {
 	if(reaction.message.channel.id === settings.cocktailchannelID) cocktail_reaction_remove(settings, reaction, user);
 	if(reaction.message.id === settings.VictumMessageID) await victum_reaction_remove(settings, reaction, user);
 	if(reaction.message.id === settings.MovieMessageID) await movie_reaction_remove(settings, reaction, user);
-	console.log(`user: ${user.username} removed the reaction ${reaction._emoji.name} from a message.`)
+	client.logger.log(`user: ${user.username} removed the reaction ${reaction._emoji.name} from a message.`)
   });
 
 
@@ -48,7 +48,7 @@ module.exports = (client) => {
 		if(reaction._emoji.name == "🎥") {
 			var role = reaction.message.channel.guild.roles.cache.find(role => role.id === settings.MovieRoleID)
 			var member = reaction.message.channel.guild.members.cache.find(user => user.id === userr.id)
-			member.roles.add(role).catch(console.error);
+			member.roles.add(role).catch(client.logger.error);
 		}
 	}
 
@@ -56,7 +56,7 @@ module.exports = (client) => {
 		if(reaction._emoji.name == "🎥") {
 			var role = reaction.message.channel.guild.roles.cache.find(role => role.id === settings.MovieRoleID)
 			var member = reaction.message.channel.guild.members.cache.find(user => user.id === userr.id)
-			member.roles.remove(role).catch(console.error);
+			member.roles.remove(role).catch(client.logger.error);
 		}
 	}
 
@@ -64,7 +64,7 @@ module.exports = (client) => {
 		if(reaction._emoji.name == "👀") {
 			var role = reaction.message.channel.guild.roles.cache.find(role => role.id === settings.VictumRoleID)
 			var member = reaction.message.channel.guild.members.cache.find(user => user.id === userr.id)
-			member.roles.add(role).catch(console.error);
+			member.roles.add(role).catch(client.logger.error);
 		}
 	}
 
@@ -72,7 +72,7 @@ module.exports = (client) => {
 		if(reaction._emoji.name == "👀") {
 			var role = reaction.message.channel.guild.roles.cache.find(role => role.id === settings.VictumRoleID)
 			var member = reaction.message.channel.guild.members.cache.find(user => user.id === userr.id)
-			member.roles.remove(role).catch(console.error);	
+			member.roles.remove(role).catch(client.logger.error);	
 		}
 	}
 

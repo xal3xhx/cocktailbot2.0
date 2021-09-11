@@ -7,7 +7,7 @@ exports.run = async (client, message, args, level) => {
 		if (user.id === '102131189187358720') return; // mine
   		user.voice.setChannel(message.guild.channels.cache.find(id => id.id === '841058244075192330'))
 		} catch (error) {
-			console.error('Something went wrong: ', error);
+			client.logger.error(`user ${args} was not in a voice channel.`)
 			return;
 		}
 };
