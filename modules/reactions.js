@@ -40,7 +40,7 @@ module.exports = (client) => {
 	if(reaction.message.channel.id === settings.cocktailchannelID) cocktail_reaction_remove(settings, reaction, user);
 	if(reaction.message.id === settings.VictumMessageID) await victum_reaction_remove(settings, reaction, user);
 	if(reaction.message.id === settings.MovieMessageID) await movie_reaction_remove(settings, reaction, user);
-	client.logger.log(`user: ${user.username} removed the reaction ${reaction._emoji.name} from a message.`)
+	client.logger.log(`user: ${user.username} removed the reaction ${reaction._emoji.name} ‎from a message.`)
   });
 
 
