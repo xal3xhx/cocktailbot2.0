@@ -3,4 +3,4 @@ This is my own cocktail bot used for making nice embeds for cocktails as well as
 
 
 ## creds
- the base of this bot was made by the guild bot community and the source can be found here [first section of this page](https://github.com/An-Idiots-Guide/guidebot) 
+ the base of this bot was made by the guild bot community and the source can be found here [guildbot](https://github.com/An-Idiots-Guide/guidebot) 
