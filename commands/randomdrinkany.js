@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   results = await client.randomdrinkany()
   .then(results =>{return results})
-  .catch(error => {console.log(error)});
+  .catch(error => {client.logger.error(error)});
 
   var name = results.name
   var description = results.discription
@@ -24,7 +24,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
       .addField(`description`, `${description}`)
       .addField(`ingredients`, `${ingredients.toString().replaceAll(",","\n")}`)
       .addField(`instructions`, `${instructions}`)
-  await message.channel.send(``,{embed},{split: true}).catch(console.error);
+  await message.channel.send(``,{embed},{split: true}).catch(client.logger.error);
   }
 
 exports.conf = {

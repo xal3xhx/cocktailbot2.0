@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   results = await client.topdrinksany()
   .then(results =>{return results})
-  .catch(error => {console.log(error)});
+  .catch(error => {client.logger.error(error)});
 
   const embed = new Discord.MessageEmbed()
   embed.setColor("RED")
@@ -10,7 +10,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   for (const i of Array(3).keys()) {
     embed.addField(`#${i+1}`,`**name**: ${results[i].name} \n **upvotes**: ${results[i].up_vote} \n **discription**: ${results[i].discription} \n **ingredients**: ${JSON.parse(results[i].ingredients).toString().replaceAll(",","\n")} \n **instructions**: ${results[i].instructions}`) 
   }
-  await message.channel.send(``,{embed},{split: true}).catch(console.error);
+  await message.channel.send(``,{embed},{split: true}).catch(client.logger.error);
 }
 
 exports.conf = {

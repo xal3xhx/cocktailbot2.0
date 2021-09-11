@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   results = await client.topdrinks(message.guild.id)
     .then(results =>{return results})
-    .catch(error => {console.log(error)});
+    .catch(error => {client.logger.error(error)});
   const settings = message.settings = client.getSettings(message.guild);
   if (!results[0]) return await message.channel.send(`there are no drinks found for this server.`)
 
@@ -12,7 +12,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   for (const i of Array(3).keys()) {
     embed.addField(`#${i+1}`,`**name**: ${results[i].name} \n **upvotes**: ${results[i].up_vote} \n **author**: ${results[i].author} \n **link**: https://discordapp.com/channels/${message.guild.id}/${settings.cocktailchannelID}/${results[i].message_id}`) 
   }
-  await message.channel.send(``,{embed},{split: true}).catch(console.error);
+  await message.channel.send(``,{embed},{split: true}).catch(client.logger.error);
 }
 
 exports.conf = {

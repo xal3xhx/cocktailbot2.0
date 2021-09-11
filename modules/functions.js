@@ -169,9 +169,8 @@ client.updateDownVote = async (newval, messageid, server_id) => {
 };
 
 client.addDrink = async (name,description,image,ingredients,instructions,author,messageid,server_id) => {
-       return new Promise( (resolve,reject) => {
-        // console.log(`INSERT INTO cocktails(name, discription, image, ingredients, instructions, author, up_vote, downvote, message_id, server_id) VALUES ("${name}", "${description}", "${image}", "${ingredients}", "${instructions}", "${author}", '0', '0', "${messageid}", "${server_id}")`)
-    var result = client.connection.query(`INSERT INTO cocktails(name, discription, image, ingredients, instructions, author, up_vote, downvote, message_id, server_id) VALUES ("${name}", "${description}", "${image}", '${ingredients}', "${instructions}", "${author}", '0', '0', "${messageid}", "${server_id}")`,(err, results, fields) =>{
+      return new Promise( (resolve,reject) => {
+      var result = client.connection.query(`INSERT INTO cocktails(name, discription, image, ingredients, instructions, author, up_vote, downvote, message_id, server_id) VALUES ("${name}", "${description}", "${image}", '${ingredients}', "${instructions}", "${author}", '0', '0', "${messageid}", "${server_id}")`,(err, results, fields) =>{
       if(err){
         reject(err);
       }

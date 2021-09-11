@@ -1,6 +1,6 @@
 exports.run = async (client, message, [action, ...value], level) => {
 
-message.channel.bulkDelete(action).then(messages => console.log(`Bulk deleted ${messages.size} message(s)`)).catch(console.error);
+message.channel.bulkDelete(action).then(messages => client.logger.log(`Bulk deleted ${messages.size} message(s)`)).catch(client.logger.error);
 };
 
 exports.conf = {

@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   results = await client.randomdrink(message.guild.id)
   .then(results =>{return results})
-  .catch(error => {console.log(error)});
+  .catch(error => {client.logger.error(error)});
 
   if (!results) return await message.channel.send(`there are no drinks found for this server.`)
 
@@ -26,7 +26,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
       .addField(`description`, `${description}`)
       .addField(`ingredients`, `${ingredients.toString().replaceAll(",","\n")}`)
       .addField(`instructions`, `${instructions}`)
-  await message.channel.send(``,{embed},{split: true}).catch(console.error);
+  await message.channel.send(``,{embed},{split: true}).catch(client.logger.error);
   }
 
 exports.conf = {
