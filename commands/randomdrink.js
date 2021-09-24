@@ -1,8 +1,11 @@
-const Discord = require('discord.js');
+const { MessageEmbed } = require("discord.js");
+const { randomdrink } = require("../modules/functions.js");
+const logger = require("../modules/Logger.js");
+
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
-  results = await client.randomdrink(message.guild.id)
+  results = await randomdrink(message.guild.id)
   .then(results =>{return results})
-  .catch(error => {client.logger.error(error)});
+  .catch(error => {logger.error(error)});
 
   if (!results) return await message.channel.send(`there are no drinks found for this server.`)
 
@@ -19,14 +22,14 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
 
   
 
-  const embed = new Discord.MessageEmbed()
+  const embed = new MessageEmbed()
       .setAuthor(name)
       .setColor("RED")
       .setImage(image)
       .addField(`description`, `${description}`)
       .addField(`ingredients`, `${ingredients.toString().replaceAll(",","\n")}`)
       .addField(`instructions`, `${instructions}`)
-  await message.channel.send(``,{embed},{split: true}).catch(client.logger.error);
+  await message.channel.send({ embeds: [embed] });
   }
 
 exports.conf = {

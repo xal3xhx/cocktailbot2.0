@@ -1,8 +1,11 @@
-const Discord = require('discord.js');
+const { MessageEmbed } = require("discord.js");
+const { fetchalldrinks, updateMessageID } = require("../modules/functions.js");
+const logger = require("../modules/Logger.js");
+
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
-  results = await client.fetchalldrinks(message.guild.id)
+  results = await fetchalldrinks(message.guild.id)
   .then(results =>{return results})
-  .catch(error => {client.logger.error(error)});
+  .catch(error => {logger.error(error)});
 
   if (!results[0]) return await message.channel.send(`there are no drinks found for this server.`)
 for (i in results) {
@@ -20,17 +23,17 @@ for (i in results) {
 
   
 
-  const embed = new Discord.MessageEmbed()
+  const embed = new MessageEmbed()
       .setAuthor(name)
       .setColor("RED")
       .setImage(image)
       .addField(`description`, `${description}`)
       .addField(`ingredients`, `${ingredients.toString().replaceAll(",","\n")}`)
       .addField(`instructions`, `${instructions}`)
-  newmessage = await message.channel.send(``,{embed},{split: true}).catch(client.logger.error);
+  newmessage = await message.channel.send({ embeds: [embed] });
   newmessage.react("👍");
   newmessage.react("👎");
-  client.updateMessageID(message_id, newmessage.id, message.guild.id)
+  updateMessageID(message_id, newmessage.id, message.guild.id)
   }
 }
 

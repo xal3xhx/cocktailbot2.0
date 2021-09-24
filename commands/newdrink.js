@@ -1,7 +1,7 @@
-const Discord = require('discord.js');
-const imgur = require('imgur');
+const { MessageEmbed } = require("discord.js");
 const { getSettings, addDrink, awaitReply } = require("../modules/functions.js");
 const logger = require("../modules/Logger.js");
+const imgur = require('imgur');
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
 
@@ -34,7 +34,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
 
   ingredients = JSON.stringify(ingredients);
 
-  const embed = new Discord.MessageEmbed()
+  const embed = new MessageEmbed()
       .setAuthor(name)
       .setColor("RED")
       .setImage(image)
@@ -42,7 +42,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
       .addField(`ingredients`, `${JSON.parse(ingredients).toString().replaceAll(",","\n")}`)
       .addField(`instructions`, `${instructions}`)
       .addField(`added by`, `${message.author.username}:${message.author.discriminator}`)
-  let sent = await message.channel.send(``,{embed},{split: true}).catch(logger.error);
+  let sent = await message.channel.send({ embeds: [embed] });
   sent.react("👍");
   sent.react("👎");
 
