@@ -1,5 +1,10 @@
+const config = require("../config.js");
+const { settings } = require("../modules/settings.js");
+
 exports.run = async (client, message, args, level) => {
-  message.reply(`Bonks ${args} go to horny jail! <a:uwubonk:837991643557658624>`);
+  const replying = settings.ensure(message.guild.id, config.defaultSettings).commandReply;
+  
+  message.reply(`Bonks ${args} go to horny jail! <a:uwubonk:837991643557658624>`, allowedMentions: { repliedUser: (replying === "true") });
 		user = await message.guild.member(message.mentions.users.first()) || await message.guild.members.fetch(target).catch(() => client.logger.error(`could not find user.`))
 		if (user.id === '667339014625558540') return; // noodles
 		if (user.id === '102131189187358720') return; // mine
