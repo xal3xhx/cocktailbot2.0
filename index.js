@@ -16,22 +16,6 @@ const mysql = require('mysql2');
 // or `bot.something`, this is what we're referring to. Your client.
 const client = new Client({ intents, partials });
 
-
-// get mysql db info
-client.connection = mysql.createConnection({
-  host     : client.config.host,
-  user     : client.config.user,
-  password : client.config.password,
-  database : client.config.database,
-  insecureAuth : true,
-  multipleStatements: true
-});
-
-// connect to db
-client.connection.connect();
-
-
-
 // Aliases, commands and slash commands are put in collections where they can be
 // read from, catalogued, listed, etc.
 const commands = new Collection();
@@ -53,6 +37,20 @@ client.container = {
   slashcmds,
   levelCache
 };
+
+
+// get mysql db info
+client.connection = mysql.createConnection({
+  host     : process.env.sql_host,
+  user     : process.env.sql_user,
+  password : process.env.sql_password,
+  database : process.env.sql_database,
+  insecureAuth : true,
+  multipleStatements: true
+});
+
+// connect to db
+client.connection.connect();
 
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
