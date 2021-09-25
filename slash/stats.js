@@ -24,4 +24,4 @@ exports.commandData = {
 };
 
 // Set this to false if you want it to be global.
-exports.guildOnly = false;
+exports.guildOnly = true;

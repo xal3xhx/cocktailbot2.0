@@ -1,6 +1,6 @@
-const logger = require("../modules/Logger.js");
-const config = require("../config.js");
-const { settings } = require("../modules/settings.js");
+const logger = require("../../modules/Logger.js");
+const config = require("../../config.js");
+const { settings } = require("../../modules/settings.js");
 
 exports.run = async (client, message, args, level) => {
   const replying = settings.ensure(message.guild.id, config.defaultSettings).commandReply;
@@ -23,7 +23,7 @@ exports.conf = {
 
 exports.help = {
   name: "bonk",
-  category: "fun",
+  category: "Fun",
   description: "bonk the horny.",
   usage: "bonk"
 };

@@ -1,13 +1,13 @@
 const { MessageEmbed } = require("discord.js");
-const { fetchalldrinksany } = require("../modules/functions.js");
-const logger = require("../modules/Logger.js");
+const { fetchalldrinks, updateMessageID } = require("../../modules/functions.js");
+const logger = require("../../modules/Logger.js");
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
-  results = await fetchalldrinksany()
+  results = await fetchalldrinks(message.guild.id)
   .then(results =>{return results})
   .catch(error => {logger.error(error)});
 
-  if (!results) return await message.channel.send(`there are no drinks found for this server.`)
+  if (!results[0]) return await message.channel.send(`there are no drinks found for this server.`)
 for (i in results) {
 
   var name = results[i].name
@@ -30,7 +30,10 @@ for (i in results) {
       .addField(`description`, `${description}`)
       .addField(`ingredients`, `${ingredients.toString().replaceAll(",","\n")}`)
       .addField(`instructions`, `${instructions}`)
-  await message.channel.send({ embeds: [embed] });
+  newmessage = await message.channel.send({ embeds: [embed] });
+  newmessage.react("👍");
+  newmessage.react("👎");
+  updateMessageID(message_id, newmessage.id, message.guild.id)
   }
 }
 
@@ -42,8 +45,8 @@ exports.conf = {
 };
 
 exports.help = {
-  name: "rebuildall",
-  category: "drinks",
-  description: "sends all the drinks in the database from every server.",
-  usage: "rebuildall"
+  name: "rebuild",
+  category: "Drinks",
+  description: "sends all the drinks in the database for the current server.",
+  usage: "rebuild"
 };

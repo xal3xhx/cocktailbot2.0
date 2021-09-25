@@ -7,14 +7,18 @@ require("dotenv").config();
 // Load up the discord.js library
 const { Client, Collection } = require("discord.js");
 // We also load the rest of the things we need in this file:
-const { readdirSync } = require("fs");
+const { readdirSync, statSync } = require("fs");
+const path = require("path")
 const { intents, partials, permLevels } = require("./config.js");
 const logger = require("./modules/Logger.js");
-const mysql = require('mysql2');
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're referring to. Your client.
 const client = new Client({ intents, partials });
+const { Player } = require("discord-music-player");
+
+const player = new Player(client);
+client.player = player;
 
 // Aliases, commands and slash commands are put in collections where they can be
 // read from, catalogued, listed, etc.
@@ -38,30 +42,33 @@ client.container = {
   levelCache
 };
 
-
-// get mysql db info
-client.connection = mysql.createConnection({
-  host     : process.env.sql_host,
-  user     : process.env.sql_user,
-  password : process.env.sql_password,
-  database : process.env.sql_database,
-  insecureAuth : true,
-  multipleStatements: true
-});
-
-// connect to db
-client.connection.connect();
-
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
 
 const init = async () => {
 
+  // will scan through and get the path for each file in sub folders as well as the main
+  const getAllFiles = function(dirPath, arrayOfFiles) {
+  files = readdirSync(dirPath)
+
+  arrayOfFiles = arrayOfFiles || []
+
+  files.forEach(function(file) {
+    if (statSync(dirPath + "/" + file).isDirectory()) {
+      arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles)
+    } else {
+      arrayOfFiles.push(path.join(dirPath, "/", file))
+    }
+  })
+
+  return arrayOfFiles
+}
+
   // Here we load **commands** into memory, as a collection, so they're accessible
   // here and everywhere else.
-  const commands = readdirSync("./commands/").filter(file => file.endsWith(".js"));
+  const commands = getAllFiles("./commands").filter(file => file.endsWith(".js"));
   for (const file of commands) {
-    const props = require(`./commands/${file}`);
+    const props = require(`./${file}`);
     logger.log(`Loading Command: ${props.help.name}. 👌`, "log");
     client.container.commands.set(props.help.name, props);
     props.conf.aliases.forEach(alias => {

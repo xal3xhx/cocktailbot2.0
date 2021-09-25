@@ -1,5 +1,5 @@
-const config = require("../config.js");
-const { settings } = require("../modules/settings.js");
+const config = require("../../config.js");
+const { settings } = require("../../modules/settings.js");
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   // Grab the container from the client to reduce line length.
   const { container } = client;
@@ -11,10 +11,10 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
     return message.reply("That command does not exist");
   }
   // the path is relative to the *current folder*, so just ./filename.js
-  delete require.cache[require.resolve(`./${command.help.name}.js`)];
+  delete require.cache[require.resolve(`../${command.help.category}/${command.help.name}.js`)];
   // We also need to delete and reload the command from the container.commands Enmap
   container.commands.delete(command.help.name);
-  const props = require(`./${command.help.name}.js`);
+  const props = require(`../${command.help.category}/${command.help.name}.js`);
   container.commands.set(command.help.name, props);
 
   message.reply({ content: `The command \`${command.help.name}\` has been reloaded`, allowedMentions: { repliedUser: (replying === "true") }});

@@ -21,7 +21,7 @@ exports.conf = {
 
 exports.help = {
   name: "onevic",
-  category: "fun",
+  category: "Fun",
   description: "picks the dab victums for this week.",
   usage: "onevic"
 };

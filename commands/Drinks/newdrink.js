@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
-const { getSettings, addDrink, awaitReply } = require("../modules/functions.js");
-const logger = require("../modules/Logger.js");
+const { getSettings, addDrink, awaitReply } = require("../../modules/functions.js");
+const logger = require("../../modules/Logger.js");
 const imgur = require('imgur');
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
@@ -64,7 +64,7 @@ exports.conf = {
 
 exports.help = {
   name: "newdrink",
-  category: "drinks",
+  category: "Drinks",
   description: "walk you through adding a drink to the database.",
   usage: "newdrink"
 };

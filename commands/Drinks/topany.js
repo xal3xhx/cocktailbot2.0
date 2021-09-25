@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
-const { topdrinksany } = require("../modules/functions.js");
-const logger = require("../modules/Logger.js");
+const { topdrinksany } = require("../../modules/functions.js");
+const logger = require("../../modules/Logger.js");
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   results = await topdrinksany()
@@ -27,7 +27,7 @@ exports.conf = {
 
 exports.help = {
   name: "topany",
-  category: "drinks",
+  category: "Drinks",
   description: "displays the top 3 drinks from all servers",
   usage: "topany"
 };

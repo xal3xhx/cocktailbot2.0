@@ -1,13 +1,11 @@
 const { MessageEmbed } = require("discord.js");
-const { randomdrink } = require("../modules/functions.js");
-const logger = require("../modules/Logger.js");
+const { randomdrinkany } = require("../../modules/functions.js");
+const logger = require("../../modules/Logger.js");
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
-  results = await randomdrink(message.guild.id)
+  results = await randomdrinkany()
   .then(results =>{return results})
   .catch(error => {logger.error(error)});
-
-  if (!results) return await message.channel.send(`there are no drinks found for this server.`)
 
   var name = results.name
   var description = results.discription
@@ -40,8 +38,8 @@ exports.conf = {
 };
 
 exports.help = {
-  name: "randomdrink",
-  category: "drinks",
-  description: "displays a random drink from current server.",
-  usage: "randomdrink"
+  name: "randomdrinkany",
+  category: "Drinks",
+  description: "displays a random drink from any server.",
+  usage: "randomdrinkany"
 };
