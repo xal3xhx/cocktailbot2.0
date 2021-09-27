@@ -12,7 +12,7 @@ exports.conf = {
 
 exports.help = {
   name: "clear",
-  category: "moderation",
+  category: "Moderation",
   description: "WARNING CLEARS ALL THE MESSAGES IN THE CURRENT CHANNEL!",
   usage: "clear"
 };
