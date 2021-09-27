@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-
+console.log("reaction module loaded!")
 module.exports = (client) => {
 	client.on('messageReactionAdd', async (reaction, user) => {
 	// When a reaction is received, check if the structure is partial
