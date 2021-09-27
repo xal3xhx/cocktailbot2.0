@@ -11,6 +11,7 @@ const { readdirSync, statSync } = require("fs");
 const path = require("path")
 const { intents, partials, permLevels } = require("./config.js");
 const logger = require("./modules/Logger.js");
+require("./modules/reactions.js");
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're referring to. Your client.
