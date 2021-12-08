@@ -1,6 +1,5 @@
-const settings = message.settings;
-
 exports.run = async (client, message, args, level) => {
+  const settings = message.settings;
   // check if user has the bonk role
   if (!message.member.roles.cache.has(settings.bonker)) {
     return await message.reply("You don't have the bonk role!");
