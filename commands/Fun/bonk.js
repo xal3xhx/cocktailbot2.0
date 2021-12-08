@@ -1,18 +1,26 @@
-const logger = require("../../modules/Logger.js");
-const config = require("../../config.js");
-const { settings } = require("../../modules/settings.js");
+const settings = message.settings;
 
 exports.run = async (client, message, args, level) => {
-  const replying = settings.ensure(message.guild.id, config.defaultSettings).commandReply;
-  
-  message.reply({ content: `Bonks ${args} go to horny jail! <a:uwubonk:837991643557658624>`, allowedMentions: { repliedUser: (replying === "true") }});
-		user = await message.guild.members.cache.get(message.mentions.users.first())
-    console.log(user)
-		if (user.id === '667339014625558540') return; // noodles
-		if (user.id === '102131189187358720') return; // mine
-    console.log(user.guild.channels.cache)
-  	user.voice.setChannel(user.guild.channels.cache.find(id => id.id === '841058244075192330')).catch(() => logger.error(`user ${args} was not in a voice channel.`))
+  // check if user has the bonk role
+  if (!message.member.roles.cache.has(settings.bonker)) {
+    return await message.reply("You don't have the bonk role!");
+  }
+  // get user from args
+  const user = message.mentions.users.first();
+  // if user is in a voice channel and is not the bot move them to channel id "settings.hornyjailchannelID"
+  if (user && user.voice.channel && user.id !== client.user.id) {
+    const channel = await message.guild.channels.cache.get(settings.hornyjailchannelID);
+    if (channel) {
+      await user.voice.setChannel(channel);
+      return await message.reply(`Bonked ${user.username}! go to horny jail!`);
+    }
+  else {
+    return await message.reply(`${user.username} is not in a voice channel!`);
+  }
+  }
 };
+
+
 
 exports.conf = {
   enabled: true,
