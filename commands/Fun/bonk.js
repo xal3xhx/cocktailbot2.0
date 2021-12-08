@@ -1,9 +1,14 @@
 exports.run = async (client, message, args, level) => {
   const settings = message.settings;
-  // check if user has the bonk role
-  if (!message.member.roles.cache.has(settings.bonker)) {
-    return await message.reply("You don't have the bonk role!");
+
+  // check if message author has the role id of "841066087772323851"
+  // if not, return. 
+  const role = message.guild.roles.cache.find(r => r.name === settings.bonker);
+  if (!message.member.roles.cache.has(role.id)) {
+    return message.channel.send("You do not have the required role to use this command.");
   }
+}
+  
   // get user from args
   const user = message.mentions.users.first();
   // if user is in a voice channel and is not the bot move them to channel id "settings.hornyjailchannelID"
