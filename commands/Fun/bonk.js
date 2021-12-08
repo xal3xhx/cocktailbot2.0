@@ -7,7 +7,6 @@ exports.run = async (client, message, args, level) => {
   if (!message.member.roles.cache.has(role.id)) {
     return message.channel.send("You do not have the required role to use this command.");
   }
-}
   
   // get user from args
   const user = message.mentions.users.first();
