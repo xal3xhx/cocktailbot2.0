@@ -23,5 +23,3 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
     description: "lists the songs in the queue",
     usage: "queue"
   };
-
-  // ~eval client.player.getQueue(message.guild.id).songs.map(Song => Song.name)
