@@ -1,17 +1,14 @@
 const { MessageEmbed } = require("discord.js");
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
-  let queue = client.player.createQueue(message.guild.id);
+  const queue = await client.player.getQueue(message.guild.id);
+    if (!queue) return message.reply('There is nothing playing.');
 
-  if(!args.join(' ')) return message.reply("you need to provide a youtube link.")
-  
-  await queue.join(message.member.voice.channel);
-  let song = await queue.playlist(args.join(' '))
+  guildQueue.clearQueue();
   const embed = new MessageEmbed()
         .setAuthor(`${message.guild.name} - Queue`, message.guild.iconURL())
         .setColor("#0099ff")
-        .setDescription(`Playlist ${song.name} has been added to the queue.`)
-        .setFooter(`Requested by ${message.author.tag}`);
+        .setDescription(`The queue has been cleared.`)
         
     return await message.channel.send({ embeds: [embed] });
 };
@@ -24,8 +21,8 @@ exports.conf = {
 };
 
 exports.help = {
-  name: "playlist",
+  name: "clearqueue",
   category: "Music",
-  description: "adds a playlist to the queue",
-  usage: "playlist {URL}"
+  description: "clears the current song queue.",
+  usage: "clearqueue"
 };

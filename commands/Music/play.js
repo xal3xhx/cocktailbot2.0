@@ -1,12 +1,18 @@
-exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
-  let guildQueue = client.player.getQueue(message.guild.id);
-  let queue = client.player.createQueue(message.guild.id);
+const { MessageEmbed } = require("discord.js");
 
-  if(!args.join(' ')) return message.reply("you need to provide a youtube link.")
-  
-  await queue.join(message.member.voice.channel);
-  let song = await queue.play(args.join(' '))
-  await message.reply(`the song ***${song.name}*** has been added to the queue.`)
+exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
+  const queue = client.player.createQueue(message.guild.id);
+  // add the song to the queue
+  await queue.join(message.member.voice.channel)
+  let song = await queue.play(args[0]);
+  // send an embed to the channel
+  const embed = new MessageEmbed()
+        .setAuthor(`${message.guild.name} - Queue`, message.guild.iconURL())
+        .setColor("#0099ff")
+        .setDescription(`${song.name} added to the queue`)
+        .setFooter(`Requested by ${message.author.tag}`);
+        
+    return await message.channel.send({ embeds: [embed] });
 };
 
 exports.conf = {
