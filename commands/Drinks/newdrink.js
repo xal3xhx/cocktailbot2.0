@@ -1,6 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { getSettings, addDrink, awaitReply } = require("../../modules/functions.js");
-const logger = require("../../modules/Logger.js");
+const { addDrink, awaitReply } = require("../../modules/functions.js");
 const imgur = require('imgur');
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars

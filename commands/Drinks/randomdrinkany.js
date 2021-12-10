@@ -12,13 +12,6 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   var image = results.image
   var ingredients = JSON.parse(results.ingredients)
   var instructions = results.instructions
-  var author = results.author
-  var up_vote = results.up_vote
-  var down_vote = results.downvote
-  var message_id = results.message_id
-  var server_id = results.server_id
-
-  
 
   const embed = new MessageEmbed()
       .setAuthor(name)

@@ -8,18 +8,19 @@ exports.run = async (client, message, args, level) => {
     return message.channel.send("You do not have the required role to use this command.");
   }
   
-  // get user from args
-  const user = message.mentions.users.first();
+  // get member from args
+  const user = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+  if (!user) {
+    return message.channel.send("Please provide a user to bonk.");
+  }
   // if user is in a voice channel and is not the bot move them to channel id "settings.hornyjailchannelID"
-  if (user && user.voice.channel && user.id !== client.user.id) {
+  if (user.voice.channel && user.id !== client.user.id) {
     const channel = await message.guild.channels.cache.get(settings.hornyjailchannelID);
-    if (channel) {
-      await user.voice.setChannel(channel);
-      return await message.reply(`Bonked ${user.username}! go to horny jail!`);
+    await user.voice.setChannel(channel);
+    return await message.reply(`<@${message.author.id}> Bonked <@${user.user.id}>! go to horny jail!`);
     }
   else {
-    return await message.reply(`${user.username} is not in a voice channel!`);
-  }
+    return await message.reply(`<@${message.author.id}> bonked <@${user.user.id}>! they were being horny in <#${message.channel.id}>!`);
   }
 };
 
