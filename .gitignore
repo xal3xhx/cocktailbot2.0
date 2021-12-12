@@ -9,6 +9,7 @@ config.js
 data/
 test.js
 .cache/
+fulllog.txt
 
 # Runtime data
 pids

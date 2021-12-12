@@ -12,7 +12,7 @@ module.exports = async (client, reaction, user) => {
       return;
     }
   }
-  const settings = getSettings(reaction.message.guildId);
+  const settings = await getSettings(reaction.message.guildId);
 
   // if(reaction.message.channel.id === settings.cocktailchannelID) await cocktail_reaction_remove(settings, reaction, user);
   if(reaction.message.id === settings.VictumMessageID) await victum_reaction_remove(settings, reaction, user);

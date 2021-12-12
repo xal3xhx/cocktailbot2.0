@@ -1,6 +1,6 @@
 const logger = require("./Logger.js");
 const config = require("../config.js");
-const { settings } = require("./settings.js");
+const settings = require("./settings.js");
 // Let's start by getting some useful functions that we'll use throughout
 // the bot, like logs and elevation features.
 const mysql = require('mysql2');
@@ -186,16 +186,14 @@ function permlevel(message) {
   the default settings are used.
 
 */
-  
-// getSettings merges the client defaults with the guild settings. guild settings in
-// enmap should only have *unique* overrides that are different from defaults.
-function getSettings(guild) {
-  settings.ensure("default", config.defaultSettings);
-  if (!guild) return settings.get("default");
-  const guildConf = settings.get(guild.id) || {};
-  // This "..." thing is the "Spread Operator". It's awesome!
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
-  return ({...settings.get("default"), ...guildConf});
+
+async function getSettings(guild) {
+  const defaults = JSON.stringify(config.defaultSettings);
+  const dbdefaults = await settings.get("default").then(results =>{return results}).catch(error => {logger.error(error)});
+  const guildConf = await settings.get(guild.id).then(results =>{return results}).catch(error => {logger.error(error)});
+  if(guild.id) await settings.ensure(guild.id, defaults);
+  if (!guild.id) return await JSON.parse(JSON.parse(JSON.stringify(dbdefaults.settings)));
+  else return await JSON.parse(JSON.parse(JSON.stringify(guildConf.settings)));
 }
 
 /*
