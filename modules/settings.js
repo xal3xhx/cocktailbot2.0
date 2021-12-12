@@ -15,8 +15,9 @@ connection = mysql.createConnection({
 connection.connect();
 
 // create a function that does the same as enmap.get
-function get(server) {
-  return new Promise((resolve, reject) => {
+async function get(server) {
+  // console.log(server);
+  let s = await new Promise((resolve, reject) => {
     connection.query(`SELECT settings FROM settings WHERE server = '${server}'`, function (err, result, fields) {
       if (err) {
         logger.error(err);
@@ -26,6 +27,8 @@ function get(server) {
       }
     });
   });
+  // console.log(`get settings: ${s.settings}`);
+  return await JSON.parse(JSON.parse(JSON.stringify(s.settings)));
 }
 
 // create a function that does the same as enmap.set

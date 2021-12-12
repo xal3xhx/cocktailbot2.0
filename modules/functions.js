@@ -188,12 +188,17 @@ function permlevel(message) {
 */
 
 async function getSettings(guild) {
+  // console.log(`Fetching settings for ${guild}`);
   const defaults = JSON.stringify(config.defaultSettings);
-  const dbdefaults = await settings.get("default").then(results =>{return results}).catch(error => {logger.error(error)});
-  const guildConf = await settings.get(guild.id).then(results =>{return results}).catch(error => {logger.error(error)});
-  if(guild.id) await settings.ensure(guild.id, defaults);
-  if (!guild.id) return await JSON.parse(JSON.parse(JSON.stringify(dbdefaults.settings)));
-  else return await JSON.parse(JSON.parse(JSON.stringify(guildConf.settings)));
+  if (guild.id) {
+    const guildConf = await settings.get(guild.id).then(results =>{return results}).catch(error => {logger.error(error)});
+    await settings.ensure(guild.id, defaults);
+    return await guildConf;
+  }
+  else {
+    const dbdefaults = await settings.get("default").then(results =>{return results}).catch(error => {logger.error(error)});
+    return await dbdefaults;
+  }
 }
 
 /*

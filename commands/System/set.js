@@ -11,17 +11,17 @@
 // OR the same as:
 // const [action, key, ...value] = args;
 const { codeBlock } = require("@discordjs/builders");
-const { settings } = require("../../modules/settings.js");
+const settings = require("../../modules/settings.js");
 const { awaitReply } = require("../../modules/functions.js");
 
 exports.run = async (client, message, [action, key, ...value], level) => { // eslint-disable-line no-unused-vars
 
   // Retrieve current guild settings (merged) and overrides only.
   const serverSettings = message.settings;
-  const defaults = settings.get("default");
-  const overrides = settings.get(message.guild.id);
+  const defaults = await settings.get("default");
+  const overrides = await settings.get(message.guild.id);
   const replying = serverSettings.commandReply;
-  if (!settings.has(message.guild.id)) settings.set(message.guild.id, {});
+  if (!await settings.has(message.guild.id)) await settings.set(message.guild.id, {});
   
   // Edit an existing key value
   if (action === "edit") {
@@ -36,10 +36,10 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     if (joinedValue === serverSettings[key]) return message.reply({ content: "This setting already has that value!", allowedMentions: { repliedUser: (replying === "true") }});
     
     // If the guild does not have any overrides, initialize it.
-    if (!settings.has(message.guild.id)) settings.set(message.guild.id, {});
+    if (!await settings.has(message.guild.id)) await settings.set(message.guild.id, {});
 
     // Modify the guild overrides directly.
-    settings.set(message.guild.id, joinedValue, key);
+    await settings.set(message.guild.id, joinedValue, key);
 
     // Confirm everything is fine!
     message.reply({ content: `${key} successfully edited to ${joinedValue}`, allowedMentions: { repliedUser: (replying === "true") }});
@@ -57,7 +57,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     // If they respond with y or yes, continue.
     if (["y", "yes"].includes(response.toLowerCase())) {
       // We delete the `key` here.
-      settings.delete(message.guild.id, key);
+      await settings.delete(message.guild.id, key);
       message.reply({ content: `${key} was successfully reset to default.`, allowedMentions: { repliedUser: (replying === "true") }});
     } else
     // If they respond with n or no, we inform them that the action has been cancelled.
