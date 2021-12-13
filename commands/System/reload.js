@@ -4,7 +4,7 @@ const settings = require("../../modules/settings.js");
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   // Grab the container from the client to reduce line length.
   const { container } = client;
-  const replying = await settings.ensure(message.guild.id, config.defaultSettings).commandReply;
+  const replying = await settings.get(message.guild.id).commandReply;
   if (!args || args.length < 1) return message.reply("Must provide a command name to reload.");
   const command = container.commands.get(args[0]) || container.commands.get(container.aliases.get(args[0]));
   // Check if the command exists and is valid
@@ -22,7 +22,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
 };
 
 exports.conf = {
-  enabled: false,
+  enabled: true,
   guildOnly: false,
   aliases: [],
   permLevel: "Bot Admin"
