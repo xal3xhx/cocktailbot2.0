@@ -85,8 +85,8 @@ ${array.join("\n")}`));
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: ["setting", "settings", "conf"],
-  permLevel: "Administrator"
+  aliases: [],
+  permLevel: "Bot Admin"
 };
 
 exports.help = {
