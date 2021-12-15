@@ -14,7 +14,6 @@ module.exports = async (client, reaction, user) => {
   }
   const settings = await getSettings(reaction.message.guildId);
 
-  // if(reaction.message.channel.id === settings.cocktailchannelID) await cocktail_reaction_remove(settings, reaction, user);
   if(reaction.message.id === settings.VictumMessageID) await victum_reaction_remove(settings, reaction, user);
   if(reaction.message.id === settings.MovieMessageID) await movie_reaction_remove(settings, reaction, user);
   logger.log(`user: ${user.username} reacted to a message with the emoji ${reaction._emoji.name}`)

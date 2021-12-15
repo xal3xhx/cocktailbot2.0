@@ -20,18 +20,18 @@ module.exports = async (client, message) => {
   // Checks if the bot was mentioned, with no message after it, returns the prefix.
   const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
   if (message.content.match(prefixMention)) {
-    return message.reply(`The prefix for this guild is \`${settings.prefix}\``);
+    return message.reply(`The prefix for this guild is \`${settings.Prefix}\``);
   }
 
   // Also good practice to ignore any message that does not start with our prefix,
   // which is set in the configuration file.
-  if (message.content.indexOf(settings.prefix) !== 0) return;
+  if (message.content.indexOf(settings.Prefix) !== 0) return;
 
   // Here we separate our "command" name, and our "arguments" for the command.
   // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
   // command = say
   // args = ["Is", "this", "the", "real", "life?"]
-  const args = message.content.slice(settings.prefix.length).trim().split(/ +/g);
+  const args = message.content.slice(settings.Prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
   // If the member on a guild is invisible or not cached, fetch them.
@@ -55,7 +55,7 @@ module.exports = async (client, message) => {
   if (!cmd.conf.enabled) return;
 
   if (level < container.levelCache[cmd.conf.permLevel]) {
-    if (settings.systemNotice === "true") {
+    if (settings.SystemNotice === "true") {
       return message.channel.send(`You do not have permission to use this command.
 Your permission level is ${level} (${config.permLevels.find(l => l.level === level).name})
 This command requires level ${container.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);

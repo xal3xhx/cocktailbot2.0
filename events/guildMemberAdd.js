@@ -6,12 +6,12 @@ module.exports = async (client, member) => {
   const settings = await getSettings(member.guild);
 
   // If welcome is off, don't proceed (don't welcome the user)
-  if (settings.welcomeEnabled !== "true") return;
+  if (settings.WelcomeEnabled !== "true") return;
 
   // Replace the placeholders in the welcome message with actual data
-  const welcomeMessage = settings.welcomeMessage.replace("{{user}}", member.user.tag);
+  const welcomeMessage = settings.WelcomeMessage.replace("{{user}}", member.user.tag);
 
   // Send the welcome message to the welcome channel
   // There's a place for more configs here.
-  member.guild.channels.cache.find(c => c.name === settings.welcomeChannel).send(welcomeMessage).catch(console.error);
+  member.guild.channels.cache.find(c => c.name === settings.WelcomeChannel).send(welcomeMessage).catch(console.error);
 };

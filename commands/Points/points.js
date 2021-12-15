@@ -1,6 +1,7 @@
 const {getPoints, addPoints, removePoints, getTop10} = require('../../modules/pointsbackend.js');
 exports.run = async (client, message, args, level) => {
     await message.guild.members.fetch()
+    if (message.settings.PointsEnabled === false) return message.channel.send(`${message.author}, points are disabled on this server.`);
 
     // if args is add, add points to a user
     // only if the message author is level 10 or higher

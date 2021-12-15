@@ -1,9 +1,10 @@
 exports.run = async (client, message, args, level) => {
   const settings = message.settings;
+  if (settings.BonkEnabled === false) return message.channel.send(`${message.author}, bonks are disabled on this server.`);
 
   // check if message author has the role id of "841066087772323851"
   // if not, return. 
-  const role = message.guild.roles.cache.find(r => r.name === settings.bonker);
+  const role = message.guild.roles.cache.find(r => r.name === settings.Bonker);
   if (!message.member.roles.cache.has(role.id)) {
     return message.channel.send("You do not have the required role to use this command.");
   }
@@ -15,7 +16,7 @@ exports.run = async (client, message, args, level) => {
   }
   // if user is in a voice channel and is not the bot move them to channel id "settings.hornyjailchannelID"
   if (user.voice.channel && user.id !== client.user.id) {
-    const channel = await message.guild.channels.cache.get(settings.hornyjailchannelID);
+    const channel = await message.guild.channels.cache.get(settings.HornyjailChannelID);
     await user.voice.setChannel(channel);
     return await message.reply(`<@${message.author.id}> Bonked <@${user.user.id}>! go to horny jail!`);
     }

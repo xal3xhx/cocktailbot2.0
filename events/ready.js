@@ -7,5 +7,5 @@ module.exports = async client => {
   // Make the bot "play the game" which is the help command with default prefix.
   const settings = await getSettings("default");
 
-  await client.user.setActivity(`${settings.prefix}help`, { type: "PLAYING" });
+  await client.user.setActivity(`${settings.Prefix}help`, { type: "PLAYING" });
 };

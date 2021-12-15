@@ -20,7 +20,7 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
   const serverSettings = message.settings;
   const defaults = await settings.get("default");
   const overrides = await settings.get(message.guild.id);
-  const replying = serverSettings.commandReply;
+  const replying = serverSettings.CommandReply;
   if (!await settings.has(message.guild.id)) await settings.set(message.guild.id, {});
   
   // Edit an existing key value

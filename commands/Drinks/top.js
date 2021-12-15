@@ -14,7 +14,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   embed.setImage("https://i.imgur.com/hKxdqF0.png")
   
   for (const i of Array(3).keys()) {
-    embed.addField(`#${i+1}`,`**name**: ${results[i].name} \n **upvotes**: ${results[i].up_vote} \n **author**: ${results[i].author} \n **link**: https://discordapp.com/channels/${message.guild.id}/${settings.cocktailchannelID}/${results[i].message_id}`) 
+    embed.addField(`#${i+1}`,`**name**: ${results[i].name} \n **upvotes**: ${results[i].up_vote} \n **author**: ${results[i].author} \n **link**: https://discordapp.com/channels/${message.guild.id}/${settings.CocktailChannelID}/${results[i].message_id}`) 
   }
   await message.channel.send({ embeds: [embed] });
 }

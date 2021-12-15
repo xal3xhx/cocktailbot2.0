@@ -29,7 +29,7 @@ exports.run = (client, message, args, level) => {
     const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
 
     let currentCategory = "";
-    let output = `= Command List =\n[Use ${settings.prefix}help <commandname> for details]\n`;
+    let output = `= Command List =\n[Use ${settings.Prefix}help <commandname> for details]\n`;
     const sorted = enabledCommands.sort((p, c) => p.help.category > c.help.category ? 1 : 
       p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
 
@@ -39,7 +39,7 @@ exports.run = (client, message, args, level) => {
         output += `\u200b\n== ${cat} ==\n`;
         currentCategory = cat;
       }
-      output += `${settings.prefix}${c.help.name}${" ".repeat(longest - c.help.name.length)} :: ${c.help.description}\n`;
+      output += `${settings.Prefix}${c.help.name}${" ".repeat(longest - c.help.name.length)} :: ${c.help.description}\n`;
     });
     message.channel.send(codeBlock("asciidoc", output));
 
