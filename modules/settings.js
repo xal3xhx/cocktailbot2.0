@@ -30,8 +30,9 @@ function set(server, settings) {
 }
 
 // create a function that does the same as enmap.ensure
-// if the server doesn't exist, it will create it
-// if the server does exist, it will update the settings
+// if the server doesn't exist load the default settings
+// if the server does exist, do nothing
+// if the server does exist, but the settings don't, load the default settings
 function ensure(server, settings) {
   return new Promise((resolve, reject) => {
     connection.query(`SELECT * FROM settings WHERE server = '${server}'`, function (err, result, fields) {
@@ -39,17 +40,10 @@ function ensure(server, settings) {
         logger.error(err);
         reject(err);
       } else {
-        if (result.length == 0) {
-          connection.query(`INSERT INTO settings (server, settings) VALUES ('${server}', '${settings}')`, function (err, result, fields) {
-            if (err) {
-              logger.error(err);
-              reject(err);
-            } else {
-              resolve(result);
-            }
-          });
+        if (result.length > 0) {
+          resolve(result);
         } else {
-          connection.query(`UPDATE settings SET settings = '${settings}' WHERE server = '${server}'`, function (err, result, fields) {
+          connection.query(`INSERT INTO settings (server, settings) VALUES ('${server}', '${settings}')`, function (err, result, fields) {
             if (err) {
               logger.error(err);
               reject(err);
@@ -62,6 +56,8 @@ function ensure(server, settings) {
     });
   });
 }
+
+
 
 
 // create a function that does the same as enmap.filter

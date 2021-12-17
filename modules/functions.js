@@ -40,10 +40,9 @@ function permlevel(message) {
 
 async function getSettings(guild) {
   // console.log(`Fetching settings for ${guild}`);
-  const defaults = JSON.stringify(config.defaultSettings);
   if (guild.id) {
     const guildConf = await settings.get(guild.id).then(results =>{return results}).catch(error => {logger.error(error)});
-    await settings.ensure(guild.id, defaults);
+    await settings.ensure(guild.id, JSON.stringify(config.defaultSettings));
     return await guildConf;
   }
   else {
