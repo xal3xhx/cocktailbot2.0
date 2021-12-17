@@ -1,18 +1,4 @@
-const mysql = require('mysql2');
-const logger = require("./Logger.js");
-
-// get mysql db info
-connection = mysql.createConnection({
-  host     : process.env.sql_host,
-  user     : process.env.sql_user,
-  password : process.env.sql_password,
-  database : process.env.sql_database,
-  insecureAuth : true,
-  multipleStatements: true
-});
-
-// connect to mysql db
-connection.connect();
+var connection = require('./DBconnection.js');
 
 // create a function that does the same as enmap.get
 async function get(server) {

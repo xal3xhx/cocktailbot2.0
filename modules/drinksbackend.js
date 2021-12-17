@@ -1,17 +1,4 @@
-const mysql = require('mysql2');
-
-// get mysql db info
-connection = mysql.createConnection({
-  host     : process.env.sql_host,
-  user     : process.env.sql_user,
-  password : process.env.sql_password,
-  database : process.env.sql_database,
-  insecureAuth : true,
-  multipleStatements: true
-});
-
-// connect to db
-connection.connect();
+var connection = require('./DBconnection.js');
 
 async function randomdrink(server_id) {
        return new Promise( (resolve,reject) => {
