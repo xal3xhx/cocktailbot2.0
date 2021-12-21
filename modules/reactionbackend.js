@@ -61,10 +61,13 @@ async function addRollReaction(emoji, role_id, server_id, message_id) {
 }
 
 // function to remove a Roll reaction from the table
-async function removeRollReaction(emoji, server_id, message_id) {
-  emoji = emoji.codePointAt(0).toString(16);
+// verify that the emoji is the same
+// verify that the server id is the same
+// verify that the message id is the same
+async function removeRollReaction(emoji, role_id, server_id, message_id) {
+    emoji = emoji.codePointAt(0).toString(16);
     return new Promise( (resolve,reject) => {
-        var result = connection.query(`DELETE FROM RollReactions WHERE emoji = "${emoji}" AND server_id = ${server_id} AND message_id = ${message_id}`,(err, results, fields) =>{
+        var result = connection.query(`DELETE FROM RollReactions WHERE emoji = "${emoji}" AND role_id = ${role_id} AND server_id = ${server_id} AND message_id = ${message_id}`,(err, results, fields) =>{
             if(err){
                 reject(err);
             }

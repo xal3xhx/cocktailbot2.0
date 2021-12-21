@@ -1,4 +1,4 @@
-const {getRewards, addReward, removeReward} = require('../../modules/pointsbackend.js');
+const {getRewards, addReward, removeReward} = require('../../modules/rewardsbackend.js');
 const {addRewardReaction, removeRewardReaction} = require('../../modules/reactionbackend.js');
 
 exports.run = async (client, message, args, level) => {

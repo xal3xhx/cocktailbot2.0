@@ -1,7 +1,8 @@
 const logger = require("../modules/Logger.js");
-const {checkRewardReaction, addRewardReaction, removeRewardReaction, checkRollReaction, addRollReaction, removeRollReaction } = require("../modules/reactionbackend.js");
 const { getSettings } = require("../modules/functions.js");
-const { getRewards, getPoints, removePoints } = require("../modules/pointsbackend.js");
+const {getRewards} = require('../modules/rewardsbackend.js');
+const {checkRewardReaction, checkRollReaction } = require("../modules/reactionbackend.js");
+const {getPoints, removePoints } = require("../modules/pointsbackend.js");
 
 module.exports = async (client, reaction, user) => {
   const settings = await getSettings(reaction.message.guild);

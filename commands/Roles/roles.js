@@ -1,4 +1,4 @@
-const { addReaction, removeReaction } = require('../../modules/reactionbackend.js');
+const { addRollReaction, removeRollReaction } = require('../../modules/reactionbackend.js');
 exports.run = async (client, message, args, level) => {
     await message.guild.members.fetch()
     
@@ -14,7 +14,7 @@ exports.run = async (client, message, args, level) => {
         const guildId = message.guild.id;
 
         // add the reaction to the database
-        addReaction(emoji, role_Id, guildId, message_Id);
+        addRollReaction(emoji, role_Id, guildId, message_Id);
         // add the reaction to the message using the message id
         message.channel.messages.fetch(message_Id).then(msg => {
             msg.react(emoji);
@@ -33,10 +33,10 @@ exports.run = async (client, message, args, level) => {
         const guildId = message.guild.id;
 
         // add the reaction to the database
-        removeReaction(emoji, role_Id, guildId, message_Id);
-        // remove the reaction from the message using the message id
+        removeRollReaction(emoji, role_Id, guildId, message_Id);
+        // remove all reactions for the emoji from the message using the message id
         message.channel.messages.fetch(message_Id).then(msg => {
-            msg.reactions.cache.find(reaction => reaction.emoji.name === emoji).users.remove(message.author.id);
+            msg.reactions.cache.get(emoji).remove();
         });
     }
 };
@@ -45,7 +45,7 @@ exports.conf = {
     enabled: true,
     guildOnly: true,
     aliases: [],
-    permLevel: "user"
+    permLevel: "Server Owner"
   };
   
   exports.help = {
