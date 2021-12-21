@@ -1,4 +1,6 @@
 const {getPoints, addPoints, removePoints, getTop10} = require('../../modules/pointsbackend.js');
+const { MessageEmbed } = require("discord.js");
+
 exports.run = async (client, message, args, level) => {
     await message.guild.members.fetch()
     if (message.settings.PointsEnabled === false) return message.channel.send(`${message.author}, points are disabled on this server.`);
@@ -60,15 +62,16 @@ exports.run = async (client, message, args, level) => {
     if (args[0] === 'top') {
         let top = await getTop10(message.guild.id);
         let topUsers = [];
-        for (let i = 0; i < 10; i++) {
-            let user = await client.users.fetch(top[i].userid);
-            topUsers.push(user);
+        for (let i = 0; i < top.length; i++) {
+            let user = await client.users.fetch(top[i].user_id);
+            topUsers.push(`${user.username} - ${top[i].points}`);
         }
-        let embed = new client.Discord.MessageEmbed()
+        let topEmbed = new MessageEmbed()
             .setTitle('Top 10 Users')
-            .setColor('#0099ff')
-            .setDescription(`${topUsers.map(user => `${user.tag} - ${top[i].points}`).join('\n')}`);
-        return message.channel.send(embed);
+            .setDescription(topUsers.join('\n'))
+            .setColor(0x00AE86);
+        
+            return message.channel.send({ embeds: [topEmbed] });
     }
 
     // if args is get or view, get the points of a user
@@ -99,9 +102,14 @@ exports.run = async (client, message, args, level) => {
         }
     }
 
-    // if no args are specified, send a help message with the commands
-    if (!args[0]) {
-        return message.reply('please specify a command.\n\n**Usage:**\n```\n!points add @user points\n!points remove @user points\n!points get @user\n!points top\n```');
+    // if no args are specified return the users points
+    let userPoints = await getPoints(message.author.id, message.guild.id);
+    if (userPoints === null) {
+        await addPoints(message.author.id, 0, message.guild.id);
+        return message.reply(`you have 0 points.`);
+    }
+    else {
+        return message.reply(`you have ${userPoints} points.`);
     }
 };
 

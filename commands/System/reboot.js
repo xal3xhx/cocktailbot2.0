@@ -6,7 +6,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   await message.reply({ content: "Bot is shutting down.", allowedMentions: { repliedUser: (replying === "true") }});
   await Promise.all(client.container.commands.map(cmd => {
     // the path is relative to the *current folder*, so just ./filename.js
-    delete require.cache[require.resolve(`./${cmd.help.name}.js`)];
+    delete require.cache[require.resolve(`../${command.help.category}/${command.help.name}.js`)];
     // We also need to delete and reload the command from the container.commands Enmap
     client.container.commands.delete(cmd.help.name);
   }));
