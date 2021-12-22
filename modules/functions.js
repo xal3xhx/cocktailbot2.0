@@ -1,9 +1,54 @@
 const logger = require("./Logger.js");
 const config = require("../config.js");
 const settings = require("./settings.js");
+const { codeBlock } = require("@discordjs/builders");
+const wait = require('util').promisify(setTimeout);
+
 // Let's start by getting some useful functions that we'll use throughout
 // the bot, like logs and elevation features.
 
+
+// Button interaction handler
+// used to edit interaction with the correct help commands
+async function buttonHandler(client, interaction) {
+  const { container } = client;
+  // get users permlevel
+  const level = permlevel(interaction.member)
+  const settings = await getSettings(interaction.guild);
+  // Filter all commands by which are available for the user's level, using the <Collection>.filter() method.
+  const myCommands = await interaction.guild ? container.commands.filter(cmd => container.levelCache[cmd.conf.permLevel] <= level) :
+    await container.commands.filter(cmd => container.levelCache[cmd.conf.permLevel] <= level && cmd.conf.guildOnly !== true);
+  // Then we will filter the myCommands collection again to get the enabled commands.
+  const enabledCommands = await myCommands.filter(cmd => cmd.conf.enabled);
+  // Here we have to get the command names only, and we use that array to get the longest name.
+  const commandNames = [...enabledCommands.keys()];
+
+  // This make the help commands "aligned" in the output.
+  const longest = await commandNames.reduce((long, str) => Math.max(long, str.length), 0);
+
+ // get the commands for the category interaction.customid
+  const commands = await enabledCommands.filter(cmd => cmd.help.category === interaction.customId);
+  // get the description for the category interaction.customid
+  // const description = await commands.reduce((desc, cmd) => desc + `${cmd.help.name}${' '.repeat(longest - cmd.help.name.length)} :: ${cmd.help.description}\n`, "");
+  let output = "";
+
+  commands.forEach( c => {
+    output += `${settings.Prefix}${c.help.name}${" ".repeat(longest - c.help.name.length)} :: ${c.help.description}\n`;
+  });
+
+  const helpMsg = `= ${interaction.customId} commands =\n\n`;
+  const endMsg = `\n[Use ${settings.Prefix}help <commandname> for details]`;
+
+  const finalstring = helpMsg + codeBlock("asciidoc", output) + endMsg;
+  
+  // edit the interaction with the new message
+  // after 5 seconds, reset the interaction to the original message
+
+  await interaction.deferUpdate();
+  await interaction.editReply(finalstring);
+  // await wait(5000);
+  // await interaction.editReply(interaction.content);
+}
 /*
   PERMISSION LEVEL FUNCTION
 
@@ -82,13 +127,11 @@ async function awaitReply(msg, question, limit = 60000) {
 // this, a conflict also occurs. KNOWING THIS however, the following 2 methods
 // are, we feel, very useful in code. 
   
-// <String>.toProperCase() returns a proper-cased string such as: 
-// "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
-Object.defineProperty(String.prototype, "toProperCase", {
-  value: function() {
-    return this.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-  }
-});
+// toProperCase(String) returns a proper-cased string such as: 
+// toProperCase("Mary had a little lamb") returns "Mary Had A Little Lamb"
+function toProperCase(string) {
+  return string.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+}
 
 // These 2 process methods will catch exceptions and give *more details* about the error and stack trace.
 process.on("uncaughtException", (err) => {
@@ -105,4 +148,4 @@ process.on("unhandledRejection", err => {
   console.error(err);
 });
 
-module.exports = { getSettings, permlevel, awaitReply };
+module.exports = { getSettings, permlevel, awaitReply, toProperCase, buttonHandler };

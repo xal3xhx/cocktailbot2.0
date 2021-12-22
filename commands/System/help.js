@@ -1,11 +1,6 @@
-/*
-The HELP command is used to display every command's name and description
-to the user, so that he may see what commands are available. The help
-command is also filtered by level, so if a user does not have access to
-a command, it is not shown to them. If a command name is given with the
-help command, its extended help is shown.
-*/
 const { codeBlock } = require("@discordjs/builders");
+const { toProperCase } = require("../../modules/functions.js");
+const { MessageActionRow, MessageButton } = require('discord.js');
 
 exports.run = (client, message, args, level) => {
   // Grab the container from the client to reduce line length.
@@ -30,28 +25,67 @@ exports.run = (client, message, args, level) => {
 
     let currentCategory = "";
     let output = `= Command List =\n[Use ${settings.Prefix}help <commandname> for details]\n`;
-    const sorted = enabledCommands.sort((p, c) => p.help.category > c.help.category ? 1 : 
-      p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
+    const sorted = enabledCommands.sort((p, c) => p.help.category > c.help.category ? 1 : p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
 
-    sorted.forEach( c => {
-      const cat = c.help.category.toProperCase();
-      if (currentCategory !== cat) {
-        output += `\u200b\n== ${cat} ==\n`;
-        currentCategory = cat;
+      // create a discord message row
+    const messageActionRow1 = new MessageActionRow()
+	const messageActionRow2 = new MessageActionRow()
+	const messageActionRow3 = new MessageActionRow()
+
+
+      // loop through the sorted commands and print out the categorie name
+      let count = 0;
+      sorted.forEach(c => {
+        // incrment a counter
+		// console.log(count);
+        if (currentCategory !== c.help.category) {
+          currentCategory = c.help.category;
+		  count += 1;
+          // create a disocrd message button with the category name
+		  // if count is 1-5, add to the first row
+		  if (count <= 5) {
+			//   console.log(currentCategory);
+			messageActionRow1.addComponents(
+				new MessageButton()
+				  .setCustomId(c.help.category)
+				  .setLabel(c.help.category)
+				  .setStyle('PRIMARY'),
+			  );
+		  }
+		  // if count is 6-10, add to the second row
+		  else if (count > 5 && count <= 10) {
+			messageActionRow2.addComponents(
+				new MessageButton()
+				  .setCustomId(c.help.category)
+				  .setLabel(c.help.category)
+				  .setStyle('PRIMARY'),
+			  );
+		  }
+		  // if count is 11-15, add to the third row
+		  else if (count > 10 && count <= 15) {
+			messageActionRow3.addComponents(
+				new MessageButton()
+				  .setCustomId(c.help.category)
+				  .setLabel(c.help.category)
+				  .setStyle('PRIMARY'),
+			  );
+		  }  
       }
-      output += `${settings.Prefix}${c.help.name}${" ".repeat(longest - c.help.name.length)} :: ${c.help.description}\n`;
     });
-    message.channel.send(codeBlock("asciidoc", output));
-
-  } else {
-    // Show individual command's help.
-    let command = args[0];
-    if (container.commands.has(command)) {
-      command = container.commands.get(command);
-      if (level < container.levelCache[command.conf.permLevel]) return;
-      message.channel.send(codeBlock("asciidoc", `= ${command.help.name} = \n${command.help.description}\nusage:: ${command.help.usage}\naliases:: ${command.conf.aliases.join(", ")}`));
-    }
-  }};
+    // send the message action row with the text "Help Menu"
+	if(messageActionRow1.components.length && messageActionRow2.components.length && messageActionRow3.components.length) {
+	message.reply({ content: 'Help Menu!', components: [messageActionRow1, messageActionRow2, messageActionRow3] });
+	}
+	else if(messageActionRow1.components.length && messageActionRow2.components.length) {
+	message.reply({ content: 'Help Menu!', components: [messageActionRow1, messageActionRow2] });
+	}
+	else if(messageActionRow1.components.length) {
+	message.reply({ content: 'Help Menu!', components: [messageActionRow1] });
+	}
+	else {
+	message.reply({ content: 'Help Menu!', components: [messageActionRow1] });
+	}
+}};
 
 exports.conf = {
   enabled: true,
