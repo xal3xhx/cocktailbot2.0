@@ -11,33 +11,36 @@ const config = {
   // By default GuideBot needs Guilds, Guild Messages and Direct Messages to work.
   // For join messages to work you need Guild Members, which is privileged and requires extra setup.
   // For more info about intents see the README.
-  intents: [ Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES ],
+  intents: [ Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS ],
   // Partials your bot may need should go here, CHANNEL is required for DM's
-  partials: ["CHANNEL"],
+  partials: ['MESSAGE', 'USER', 'CHANNEL', 'REACTION'],
 
   // Default per-server settings. These settings are entered in a database on first load, 
   // And are then completely ignored from this file. To modify default settings, use the `conf` command.
   // DO NOT REMOVE THIS BEFORE YOUR BOT IS LOADED AND FUNCTIONAL.
   
   "defaultSettings" : {
-    "prefix": "~",
-    "cocktailchannelID": "",
-    "hornyjailchannelID": "", 
-    "eventchannelID": "",
-    "VictumMessageID": "",
-    "MovieMessageID": "",
-    "VictumRoleID": "",
-    "MovieRoleID": "",
-    "bonker": "bonker",
-    "modLogChannel": "mod-log",
-    "modRole": "Moderator",
-    "adminRole": "Administrator",
-    "systemNotice": "true", // This gives a notice when a user tries to run a command that they do not have permission to use.
-    "commandReply": "true", // Toggle this if you want the bot to ping the executioner or not.
-    "welcomeChannel": "welcome",
-    "welcomeMessage": "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
-    "welcomeEnabled": "false"
-  },
+    "Prefix":"~",
+    "CocktailChannelID":"000",
+    "HornyjailChannelID":"000",
+    "EventChannelID":"000",
+    "tokensChannelID":"000",
+    "rewardChannelID":"000",
+    "VictumMessageID":"000",
+    "MovieMessageID":"000",
+    "VictumRoleID":"000",
+    "MovieRoleID":"000",
+    "WelcomeChannel":"welcome",
+    "WelcomeMessage":"Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
+    "PointsName":"points",
+    "Bonker":"000",
+    "PartyPlanner":"000",
+    "SystemNotice":"true",
+    "CommandReply":"true",
+    "WelcomeEnabled":"false",
+    "BonkEnabled":"true",
+    "PointsEnabled":"true"
+ },
 
   // PERMISSION LEVEL DEFINITIONS.
 
@@ -49,28 +52,16 @@ const config = {
       // level allows them to.
       check: () => true
     },
-    { level: 5,
-      name: "bonker",
-      check: (message) => {
-        try {
-          const bonker = message.guild.roles.cache.find(r => r.name.toLowerCase() === message.settings.bonker.toLowerCase());
-          if (bonker && message.member.roles.cache.has(bonker.id)) return true;
-        } catch (e) {
-          return false;
-        }
-      }
-    },
-    { level: 8,
-      name: "Party Planner", 
-      // Simple check, if the guild owner id matches the message author's ID, then it will return true.
-      // Otherwise it will return false.
-      check: (message) => message.channel.type === "text" ? ('194248148758167553' === message.author.id ? true : false) : false
-    },
     { level: 15,
       name: "Server Owner", 
       // Simple check, if the guild owner id matches the message author's ID, then it will return true.
       // Otherwise it will return false.
-      check: (message) => message.channel.type === "text" ? (message.guild.ownerID === message.author.id ? true : false) : false
+      check: (message) => {
+        // try message.user.id first, then message.author.id
+        if(message.author) return message.author.id === message.guild.ownerID;
+        else if (message.user) return message.user.id === message.guild.ownerID;
+        else return false;
+      }
     },
 
     // Bot Support is a special inbetween level that has the equivalent of server owner access
@@ -79,13 +70,24 @@ const config = {
       name: "Bot Support",
       // The check is by reading if an ID is part of this array. Yes, this means you need to
       // change this and reboot the bot to add a support user. Make it better yourself!
-      check: (message) => config.support.includes(message.author.id)
+      check: (message) => {
+        // try message.user.id first, then message.author.id
+        if(message.author) return config.support.includes(message.author.id);
+        else if (message.user) return config.support.includes(message.user.id);
+        else return false;
+      }
     },
 
     // Bot Admin has some limited access like rebooting the bot or reloading commands.
     { level: 19,
       name: "Bot Admin",
-      check: (message) => config.admins.includes(message.author.id)
+      // check if message.author.id or message.user.id is part of this array.
+      check: (message) => {
+        // try message.user.id first, then message.author.id
+        if(message.author) return config.admins.includes(message.author.id);
+        else if (message.user) return config.admins.includes(message.user.id);
+        else return false;
+      }
     },
 
     // This is the bot owner, this should be the highest permission level available.
@@ -94,9 +96,15 @@ const config = {
     { level: 20,
       name: "Bot Owner", 
       // Another simple check, compares the message author id to a list of owners found in the bot application.
-      check: (message) => message.author.id === process.env.OWNER
+      // check if message.author.id or message.user.id is equal to process.env.OWNER
+      check: (message) => {
+        // try message.user.id first, then message.author.id
+        if(message.author) return message.author.id === process.env.OWNER;
+        else if (message.user) return message.user.id === process.env.OWNER;
+        else return false;
+      }
     }
   ]
 };
-
+        
 module.exports = config;
