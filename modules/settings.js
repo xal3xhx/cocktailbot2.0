@@ -1,4 +1,5 @@
 var connection = require('./DBconnection.js');
+const logger = require("./Logger.js");
 
 // create a function that does the same as enmap.get
 async function get(server) {
@@ -30,7 +31,7 @@ function set(server, settings) {
 }
 
 // create a function that does the same as enmap.ensure
-// if the server doesn't exist load the default settings
+// if the server doesn't exist load the default settings into the database for that server and return the default settings
 // if the server does exist, do nothing
 // if the server does exist, but the settings don't, load the default settings
 function ensure(server, settings) {
@@ -40,17 +41,17 @@ function ensure(server, settings) {
         logger.error(err);
         reject(err);
       } else {
-        if (result.length > 0) {
-          resolve(result);
-        } else {
+        if (result.length === 0) {
           connection.query(`INSERT INTO settings (server, settings) VALUES ('${server}', '${settings}')`, function (err, result, fields) {
             if (err) {
               logger.error(err);
               reject(err);
             } else {
-              resolve(result);
+              resolve(settings);
             }
           });
+        } else {
+          resolve(settings);
         }
       }
     });

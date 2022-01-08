@@ -35,11 +35,17 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     // User must specify a different value than the current one.
     if (joinedValue === serverSettings[key]) return message.reply({ content: "This setting already has that value!", allowedMentions: { repliedUser: (replying === "true") }});
     
-    // If the guild does not have any overrides, initialize it.
-    if (!await settings.has(message.guild.id)) await settings.set(message.guild.id, {});
+    // get the current settings for the guild
+    const currentSettings = await settings.ensure(message.guild.id, defaults);
+    // replace the value at the key
+    console.log(key);
+    console.log(joinedValue);
+    currentSettings[key] = joinedValue;
+    // set the new settings for the guild
+    // console.log(JSON.stringify(currentSettings));
+    await settings.set(message.guild.id, JSON.stringify(currentSettings));
 
-    // Modify the guild overrides directly.
-    await settings.set(message.guild.id, joinedValue, key);
+    
 
     // Confirm everything is fine!
     message.reply({ content: `${key} successfully edited to ${joinedValue}`, allowedMentions: { repliedUser: (replying === "true") }});

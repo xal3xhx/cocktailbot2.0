@@ -18,8 +18,7 @@ exports.run = async (client, message, args, level) => {
             var cost = rewards[i].cost;
             var reward = rewards[i].reward;
             var rewardString = '';
-            if (reward) rewardString = `${cost} points for: **${reward}**`;
-            else rewardString = `${cost} points`;
+            rewardString = `${cost} points for: **${reward}**`;
 
             // send a message with the cost and reward
             var rewardmessage = await message.channel.send(rewardString);

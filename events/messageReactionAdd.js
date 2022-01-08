@@ -50,7 +50,7 @@ module.exports = async (client, reaction, user) => {
       } else {
         // send a message to the token channel
         const tokenChannel = await reaction.message.guild.channels.cache.find(channel => channel.id === settings.tokensChannelID);
-        if (tokenChannel) {          
+        if (tokenChannel) {
           let tokenmessage = await tokenChannel.send(`${user} tried to redeem **${rewardData[0].reward}** but did not have enough points!`);
           // remove the message after 5 seconds
           setTimeout(() => {
