@@ -10,6 +10,8 @@ data/
 test.js
 .cache/
 fulllog.txt
+downloads
+downloads/
 
 # Runtime data
 pids
