@@ -3,7 +3,8 @@ const { MessageEmbed } = require("discord.js");
 
 exports.run = async (client, message, args, level) => {
     await message.guild.members.fetch()
-    if (message.settings.PointsEnabled === false) return message.channel.send(`${message.author}, points are disabled on this server.`);
+    if (message.settings.PointsEnabled === false) return message.channel.send(`${message.author}, The points system is disabled on this server.`);
+    let pointsname = message.settings.PointsName;
 
     // if args is add, add points to a user
     // only if the message author is level 10 or higher
@@ -11,23 +12,23 @@ exports.run = async (client, message, args, level) => {
     // if the user is in the database, add points to their points
     // if no user is mentioned, add points to the message author
     if (args[0] === 'add') {
-        if (level <= 10) return message.reply('you do not have permission to add points.');
-        if (!args[1]) return message.reply('please specify a user to add points to.');
+        if (level <= 10) return message.reply(`you do not have permission to add ${pointsname}.`);
+        if (!args[1]) return message.reply(`please specify a user to add ${pointsname} to.`);
         let user = message.mentions.users.first();
-        if (!user) return message.reply('please specify a valid user to add points to.');
-        if (user.bot) return message.reply('you cannot add points to a bot.');
+        if (!user) return message.reply(`please specify a valid user to add ${pointsname} to.`);
+        if (user.bot) return message.reply(`you cannot add ${pointsname} to a bot.`);
         let points = args[2];
-        if (!points) return message.reply('please specify the amount of points to add.');
-        if (isNaN(points)) return message.reply('please specify a valid amount of points to add.');
-        if (points < 1) return message.reply('please specify a valid amount of points to add.');
+        if (!points) return message.reply(`please specify the amount of ${pointsname} to add.`);
+        if (isNaN(points)) return message.reply(`please specify a valid amount of ${pointsname} to add.`);
+        if (points < 1) return message.reply(`please specify a valid amount of ${pointsname} to add.`);
         let userPoints = await getPoints(user.id, message.guild.id);
         if (userPoints === null) {
             await addPoints(user.id, points, message.guild.id);
-            return message.reply(`${user} has been added to the database with ${points} points.`);
+            return message.reply(`${user} has been added to the database with ${points} ${pointsname}.`);
         }
         else {
             await addPoints(user.id, points, message.guild.id);
-            return message.reply(`${user} has been given ${points} points.`);
+            return message.reply(`${user} has been given ${points} ${pointsname}.`);
         }
     }
 
@@ -37,22 +38,22 @@ exports.run = async (client, message, args, level) => {
     // if the user is in the database, remove points from their points
     // if no user is mentioned, remove points from the message author
     if (args[0] === 'remove') {
-        if (level <= 10) return message.reply('you do not have permission to remove points.');
-        if (!args[1]) return message.reply('please specify a user to remove points from.');
+        if (level <= 10) return message.reply(`you do not have permission to remove ${pointsname}.`);
+        if (!args[1]) return message.reply(`please specify a user to remove ${pointsname} from.`);
         let user = message.mentions.users.first();
-        if (!user) return message.reply('please specify a valid user to remove points from.');
-        if (user.bot) return message.reply('you cannot remove points from a bot.');
+        if (!user) return message.reply(`please specify a valid user to remove ${pointsname} from.`);
+        if (user.bot) return message.reply(`you cannot remove ${pointsname} from a bot.`);
         let points = args[2];
-        if (!points) return message.reply('please specify the amount of points to remove.');
-        if (isNaN(points)) return message.reply('please specify a valid amount of points to remove.');
-        if (points < 1) return message.reply('please specify a valid amount of points to remove.');
+        if (!points) return message.reply(`please specify the amount of ${pointsname} to remove.`);
+        if (isNaN(points)) return message.reply(`please specify a valid amount of ${pointsname} to remove.`);
+        if (points < 1) return message.reply(`please specify a valid amount of ${pointsname} to remove.`);
         let userPoints = await getPoints(user.id, message.guild.id);
         if (userPoints === null) {
-            return message.reply(`${user} does not have any points to remove.`);
+            return message.reply(`${user} does not have any ${pointsname} to remove.`);
         }
         else {
             await removePoints(user.id, points, message.guild.id);
-            return message.reply(`${user} has had ${points} points removed.`);
+            return message.reply(`${user} has had ${points} ${pointsname} removed.`);
         }
     }
 
@@ -74,42 +75,37 @@ exports.run = async (client, message, args, level) => {
             return message.channel.send({ embeds: [topEmbed] });
     }
 
-    // if args is get or view, get the points of a user
+    // if no are args,
     // if no user is mentioned, get the points of the message author
     // if the user is not in the database, add them with 0 points
     // if the user is in the database, send the points
-    if (args[0] === 'get' || args[0] === 'view') {
-        if (!args[1]) {
-            let userPoints = await getPoints(message.author.id, message.guild.id);
+    if (!args[0]) {
+        let author = message.author
+        let mention = message.mentions.users.first();
+        if(mention) {
+            // check if message author is level 10 or higher
+            if (level <= 10) return message.reply(`you do not have permission to view other users ${pointsname}.`);
+            if (!mention) return message.reply(`please specify a valid user to get ${pointsname} for.`);
+            if (mention.bot) return message.reply(`you cannot get ${pointsname} from a bot.`);
+            let userPoints = await getPoints(mention.id, message.guild.id);
             if (userPoints === null) {
-                await addPoints(message.author.id, 0, message.guild.id);
-                return message.reply(`you have no points.`);
+                await addPoints(mention.id, 0, message.guild.id);
+                return message.reply(`${mention} has 0 ${pointsname}.`);
             }
             else {
-                return message.reply(`you have ${userPoints} points.`);
+                return message.reply(`${mention} has ${userPoints} ${pointsname}.`);
             }
         }
-        let user = message.mentions.users.first();
-        if (!user) return message.reply('please specify a valid user to get points for.');
-        if (user.bot) return message.reply('you cannot get points from a bot.');
-        let userPoints = await getPoints(user.id, message.guild.id);
-        if (userPoints === null) {
-            await addPoints(user.id, 0, message.guild.id);
-            return message.reply(`${user} has been added to the database with 0 points.`);
-        }
         else {
-            return message.reply(`${user} has ${userPoints} points.`);
+            let userPoints = await getPoints(author.id, message.guild.id);
+            if (userPoints === null) {
+                await addPoints(author.id, 0, message.guild.id);
+                return message.reply(`You have 0 ${pointsname}.`);
+            }
+            else {
+                return message.reply(`You have ${userPoints} ${pointsname}.`);
+            }
         }
-    }
-
-    // if no args are specified return the users points
-    let userPoints = await getPoints(message.author.id, message.guild.id);
-    if (userPoints === null) {
-        await addPoints(message.author.id, 0, message.guild.id);
-        return message.reply(`you have 0 points.`);
-    }
-    else {
-        return message.reply(`you have ${userPoints} points.`);
     }
 };
 
@@ -117,13 +113,13 @@ exports.conf = {
     enabled: true,
     guildOnly: true,
     aliases: [],
-    permLevel: "user"
+    permLevel: "User"
   };
   
   exports.help = {
     name: "points",
     category: "Points",
-    description: "get your points",
-    usage: "Points"
+    description: "View your points or add/remove points from another user.",
+    usage: "Points [add/remove/top] [user] [amount]"
   };
   

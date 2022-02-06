@@ -3,8 +3,8 @@ const {addRewardReaction, removeRewardReaction} = require('../../modules/reactio
 
 exports.run = async (client, message, args, level) => {
     await message.guild.members.fetch()
-    if (message.settings.PointsEnabled === false) return await message.channel.send(`${message.author}, points are disabled on this server.`);
-
+    if (message.settings.PointsEnabled === false) return message.channel.send(`${message.author}, The points system is disabled on this server.`);
+    let pointsname = message.settings.PointsName;
 
     // if args[0] is generate, send a separate message for each reward and add a reaction to each message
     if (args[0] === 'generate') {
@@ -18,7 +18,7 @@ exports.run = async (client, message, args, level) => {
             var cost = rewards[i].cost;
             var reward = rewards[i].reward;
             var rewardString = '';
-            rewardString = `${cost} points for: **${reward}**`;
+            rewardString = `${cost} ${pointsname} for: **${reward}**`;
 
             // send a message with the cost and reward
             var rewardmessage = await message.channel.send(rewardString);
@@ -33,7 +33,6 @@ exports.run = async (client, message, args, level) => {
         await message.delete();
     }
     
-
     // if args[0] is add
     // - add the reward to the database
     // - send a message with the cost and reward
@@ -55,8 +54,8 @@ exports.run = async (client, message, args, level) => {
 
         // create a string of the cost and reward
         var rewardString = '';
-        if (reward) rewardString = `${cost} points for: **${reward}**`;
-        else rewardString = `${cost} points`;
+        if (reward) rewardString = `${cost} ${pointsname} for: **${reward}**`;
+        else rewardString = `${cost} ${pointsname}`;
 
         // send a message with the cost and reward
         var rewardmessage = await message.channel.send(rewardString);

@@ -1,8 +1,9 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 
 exports.run = (client, message, args, level) => {
   // Grab the container from the client to reduce line length.
   const { container } = client;
+
   // If no specific command is called, show all filtered commands.
   if (!args[0]) {
     // Load guild settings (for prefixes and eventually per-guild tweaks)
@@ -83,7 +84,37 @@ exports.run = (client, message, args, level) => {
 	else {
 	message.reply({ content: 'Help Menu!', components: [messageActionRow1] });
 	}
-}};
+}
+  // if a specific command is called, show that command's help.
+  else {
+	let command = args[0];
+	    // Check if the command, or alias, exist in the collections.
+    if (!(container.commands.has(command) || container.aliases.has(command))) {
+      return message.reply('That command does not exist!');
+    }
+
+    // Load the command again, since it may have changed while awaiting a message.
+    const thisCommand = container.commands.get(command) || container.aliases.get(command);
+
+    // create a discord message row
+    const messageActionRow1 = new MessageActionRow()
+	const messageActionRow2 = new MessageActionRow()
+	const messageActionRow3 = new MessageActionRow()
+
+    // Create a better embed for the command help.
+    const embed = new MessageEmbed()
+      .setTitle(`Help for: ${thisCommand.help.name}`)
+      .setColor(0x00AE86)
+      .addField('Description', thisCommand.help.description, true)
+      .addField('Usage', thisCommand.help.usage, true)
+      .addField('Aliases', thisCommand.conf.aliases.join(', ') || 'None', true)
+      .addField('Permission Level', thisCommand.conf.permLevel, true);
+
+    // send the message action row with the text "Help Menu"
+	console.log(embed);
+	message.reply({ content: 'Help Menu!', embeds: [embed] });
+  }
+};
 
 exports.conf = {
   enabled: true,
