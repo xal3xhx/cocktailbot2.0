@@ -79,32 +79,30 @@ exports.run = async (client, message, args, level) => {
     // if no user is mentioned, get the points of the message author
     // if the user is not in the database, add them with 0 points
     // if the user is in the database, send the points
-    if (!args[0]) {
-        let author = message.author
-        let mention = message.mentions.users.first();
-        if(mention) {
-            // check if message author is level 10 or higher
-            if (level <= 10) return message.reply(`you do not have permission to view other users ${pointsname}.`);
-            if (!mention) return message.reply(`please specify a valid user to get ${pointsname} for.`);
-            if (mention.bot) return message.reply(`you cannot get ${pointsname} from a bot.`);
-            let userPoints = await getPoints(mention.id, message.guild.id);
-            if (userPoints === null) {
-                await addPoints(mention.id, 0, message.guild.id);
-                return message.reply(`${mention} has 0 ${pointsname}.`);
-            }
-            else {
-                return message.reply(`${mention} has ${userPoints} ${pointsname}.`);
-            }
+    let author = message.author
+    let mention = message.mentions.users.first();
+    if(mention) {
+        // check if message author is level 10 or higher
+        if (level <= 10) return message.reply(`you do not have permission to view other users ${pointsname}.`);
+        if (!mention) return message.reply(`please specify a valid user to get ${pointsname} for.`);
+        if (mention.bot) return message.reply(`you cannot get ${pointsname} from a bot.`);
+        let userPoints = await getPoints(mention.id, message.guild.id);
+        if (userPoints === null) {
+            await addPoints(mention.id, 0, message.guild.id);
+            return message.reply(`${mention} has 0 ${pointsname}.`);
         }
         else {
-            let userPoints = await getPoints(author.id, message.guild.id);
-            if (userPoints === null) {
-                await addPoints(author.id, 0, message.guild.id);
-                return message.reply(`You have 0 ${pointsname}.`);
-            }
-            else {
-                return message.reply(`You have ${userPoints} ${pointsname}.`);
-            }
+            return message.reply(`${mention} has ${userPoints} ${pointsname}.`);
+        }
+    }
+    else {
+        let userPoints = await getPoints(author.id, message.guild.id);
+        if (userPoints === null) {
+            await addPoints(author.id, 0, message.guild.id);
+            return message.reply(`You have 0 ${pointsname}.`);
+        }
+        else {
+            return message.reply(`You have ${userPoints} ${pointsname}.`);
         }
     }
 };
