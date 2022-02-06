@@ -1,40 +1,6 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
-const { Collection } = require('discord.js');
-
-async function fetchMore(channel, limit = 5000) {
-  if (!channel) {
-    throw new Error(`Expected channel, got ${typeof channel}.`);
-  }
-  if (limit <= 100) {
-    return channel.messages.fetch({ limit });
-  }
-
-  let collection = new Collection();
-  let lastId = null;
-  let options = {};
-  let remaining = limit;
-
-  while (remaining > 0) {
-    options.limit = remaining > 100 ? 100 : remaining;
-    remaining = remaining > 100 ? remaining - 100 : 0;
-
-    if (lastId) {
-      options.before = lastId;
-    }
-
-    let messages = await channel.messages.fetch(options);
-
-    if (!messages.last()) {
-      break;
-    }
-
-    collection = collection.concat(messages);
-    lastId = messages.last().id;
-  }
-
-  return collection;
-}
+const { fetchMore } = require("../../modules/functions.js");
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
 

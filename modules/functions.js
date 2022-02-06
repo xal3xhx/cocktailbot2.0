@@ -2,6 +2,7 @@ const logger = require("./Logger.js");
 const config = require("../config.js");
 const settings = require("./settings.js");
 const { codeBlock } = require("@discordjs/builders");
+const { Collection } = require('discord.js');
 const wait = require('util').promisify(setTimeout);
 
 // Let's start by getting some useful functions that we'll use throughout
@@ -119,6 +120,41 @@ async function awaitReply(msg, question, limit = 60000) {
   }
 }
 
+// fetches as many message as you want form a given channel
+// will lag if you try to fetch more than 100 messages
+async function fetchMore(channel, limit = 1000) {
+  if (!channel) {
+    throw new Error(`Expected channel, got ${typeof channel}.`);
+  }
+  if (limit <= 100) {
+    return channel.messages.fetch({ limit });
+  }
+
+  let collection = new Collection();
+  let lastId = null;
+  let options = {};
+  let remaining = limit;
+
+  while (remaining > 0) {
+    options.limit = remaining > 100 ? 100 : remaining;
+    remaining = remaining > 100 ? remaining - 100 : 0;
+
+    if (lastId) {
+      options.before = lastId;
+    }
+
+    let messages = await channel.messages.fetch(options);
+
+    if (!messages.last()) {
+      break;
+    }
+
+    collection = collection.concat(messages);
+    lastId = messages.last().id;
+  }
+
+  return collection;
+}
 
 /* MISCELLANEOUS NON-CRITICAL FUNCTIONS */
   
@@ -148,4 +184,4 @@ process.on("unhandledRejection", err => {
   console.error(err);
 });
 
-module.exports = { getSettings, permlevel, awaitReply, toProperCase, buttonHandler };
+module.exports = { getSettings, permlevel, awaitReply, toProperCase, buttonHandler, fetchMore };
