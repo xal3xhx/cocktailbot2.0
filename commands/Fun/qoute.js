@@ -13,9 +13,10 @@ exports.run = async (client, message, args, level) => {
         }, 3000);
     });
     const messages = await fetchMore(channel, 5000);
-    const countMention = messages.filter(m => m.content.includes("<@")).size;
+    // filter out messages that match the regex  `.*([”“""*][^”“""*]*[”“""*])[ ]{0,2}[- \e_+:][- \e_+:]{0,2}(<@[!]{0,1}[0-9]+>).*`
+    const quotes = await messages.filter(m => m.content.match(/^.*([”“""*][^”“""*]*[”“""*])[ ]{0,2}[- \e_+:][- \e_+:]{0,2}(<@[!]{0,1}[0-9]+>).*$/));
     // count all mentions for each user
-    const mentions = messages.reduce((acc, m) => {
+    const mentions = await quotes.reduce((acc, m) => {
         const user = m.mentions.users.first();
         if (!user) return acc;
         if (!acc[user.id]) {
