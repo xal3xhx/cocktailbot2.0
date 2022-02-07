@@ -55,13 +55,9 @@ module.exports = async (client, message) => {
   if (!cmd.conf.enabled) return;
 
   if (level < container.levelCache[cmd.conf.permLevel]) {
-    if (settings.SystemNotice === "true") {
-      return message.channel.send(`You do not have permission to use this command.
-Your permission level is ${level} (${config.permLevels.find(l => l.level === level).name})
-This command requires level ${container.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
-    } else {
-      return;
-    }
+    return message.channel.send(`You do not have permission to use this command.
+      Your permission level is ${level} (${config.permLevels.find(l => l.level === level).name})
+      This command requires level ${container.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
   }
 
   // To simplify message arguments, the author's level is now put on level (not member so it is supported in DMs)

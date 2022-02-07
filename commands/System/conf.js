@@ -16,39 +16,38 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
 
   // Retrieve Default Values from the default settings in the bot.
   const defaults = await settings.get("default");
-  const replying = await settings.ensure(message.guild.id, config.defaultSettings).CommandReply;
 
   // Adding a new key adds it to every guild (it will be visible to all of them)
   if (action === "add") {
-    if (!key) return message.reply({ content: "Please specify a key to add", allowedMentions: { repliedUser: (replying === "true") }});
-    if (defaults[key]) return message.reply({ content: "This key already exists in the default settings", allowedMentions: { repliedUser: (replying === "true") }});
-    if (value.length < 1) return message.reply({ content: "Please specify a value", allowedMentions: { repliedUser: (replying === "true") }});
+    if (!key) return message.reply({ content: "Please specify a key to add"});
+    if (defaults[key]) return message.reply({ content: "This key already exists in the default settings"});
+    if (value.length < 1) return message.reply({ content: "Please specify a value"});
 
     // `value` being an array, we need to join it first.
     defaults[key] = value.join(" ");
   
     // One the settings is modified, we write it back to the collection
     await settings.set("default", defaults);
-    message.reply({ content: `${key} successfully added with the value of ${value.join(" ")}`, allowedMentions: { repliedUser: (replying === "true") }});
+    message.reply({ content: `${key} successfully added with the value of ${value.join(" ")}`});
   } else
   
   // Changing the default value of a key only modified it for guilds that did not change it to another value.
   if (action === "edit") {
-    if (!key) return message.reply({ content: "Please specify a key to edit", allowedMentions: { repliedUser: (replying === "true") }});
-    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings", allowedMentions: { repliedUser: (replying === "true") }});
-    if (value.length < 1) return message.reply({ content: "Please specify a new value", allowedMentions: { repliedUser: (replying === "true") }});
+    if (!key) return message.reply({ content: "Please specify a key to edit"});
+    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings"});
+    if (value.length < 1) return message.reply({ content: "Please specify a new value"});
 
     defaults[key] = value.join(" ");
 
     await settings.set("default", defaults);
-    message.reply({ content: `${key} successfully edited to ${value.join(" ")}`, allowedMentions: { repliedUser: (replying === "true") }});
+    message.reply({ content: `${key} successfully edited to ${value.join(" ")}`});
   } else
   
   // WARNING: DELETING A KEY FROM THE DEFAULTS ALSO REMOVES IT FROM EVERY GUILD
   // MAKE SURE THAT KEY IS REALLY NO LONGER NEEDED!
   if (action === "del") {
-    if (!key) return message.reply({ content: "Please specify a key to delete.", allowedMentions: { repliedUser: (replying === "true") }});
-    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings", allowedMentions: { repliedUser: (replying === "true") }});
+    if (!key) return message.reply({ content: "Please specify a key to delete."});
+    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings"});
     
     // Throw the 'are you sure?' text at them.
     const response = await awaitReply(message, `Are you sure you want to permanently delete ${key} from all guilds? This **CANNOT** be undone.`);
@@ -67,19 +66,19 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
         await settings.set(guildId, conf);
       }
       
-      message.reply({ content: `${key} was successfully deleted.`, allowedMentions: { repliedUser: (replying === "true") }});
+      message.reply({ content: `${key} was successfully deleted.`});
     } else
     // If they respond with n or no, we inform them that the action has been cancelled.
     if (["n","no","cancel"].includes(response)) {
-      message.reply({ content: "Action cancelled.", allowedMentions: { repliedUser: (replying === "true") }});
+      message.reply({ content: "Action cancelled."});
     }
   } else
   
   // Display a key's default value
   if (action === "get") {
-    if (!key) return message.reply({ content: "Please specify a key to view", allowedMentions: { repliedUser: (replying === "true") }});
-    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings", allowedMentions: { repliedUser: (replying === "true") }});
-    message.reply({ content: `The value of ${key} is currently ${defaults[key]}`, allowedMentions: { repliedUser: (replying === "true") }});
+    if (!key) return message.reply({ content: "Please specify a key to view"});
+    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings"});
+    message.reply({ content: `The value of ${key} is currently ${defaults[key]}`});
 
   // Display all default settings.
   } else {

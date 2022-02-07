@@ -20,20 +20,19 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
   const serverSettings = message.settings;
   const defaults = await settings.get("default");
   const overrides = await settings.get(message.guild.id);
-  const replying = serverSettings.CommandReply;
   if (!await settings.has(message.guild.id)) await settings.set(message.guild.id, {});
   
   // Edit an existing key value
   if (action === "edit") {
     // User must specify a key.
-    if (!key) return message.reply({ content: "Please specify a key to edit", allowedMentions: { repliedUser: (replying === "true") }});
+    if (!key) return message.reply({ content: "Please specify a key to edit"});
     // User must specify a key that actually exists!
-    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings", allowedMentions: { repliedUser: (replying === "true") }});
+    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings"});
     const joinedValue = value.join(" ");
     // User must specify a value to change.
-    if (joinedValue.length < 1) return message.reply({ content: "Please specify a new value", allowedMentions: { repliedUser: (replying === "true") }});
+    if (joinedValue.length < 1) return message.reply({ content: "Please specify a new value"});
     // User must specify a different value than the current one.
-    if (joinedValue === serverSettings[key]) return message.reply({ content: "This setting already has that value!", allowedMentions: { repliedUser: (replying === "true") }});
+    if (joinedValue === serverSettings[key]) return message.reply({ content: "This setting already has that value!"});
     
     // get the current settings for the guild
     const currentSettings = await settings.ensure(message.guild.id, defaults);
@@ -48,14 +47,14 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     
 
     // Confirm everything is fine!
-    message.reply({ content: `${key} successfully edited to ${joinedValue}`, allowedMentions: { repliedUser: (replying === "true") }});
+    message.reply({ content: `${key} successfully edited to ${joinedValue}`});
   } else
   
   // Resets a key to the default value
   if (action === "del" || action === "reset") {
-    if (!key) return message.reply({ content: "Please specify a key to reset.", allowedMentions: { repliedUser: (replying === "true") }});
-    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings", allowedMentions: { repliedUser: (replying === "true") }});
-    if (!overrides[key]) return message.reply({ content: "This key does not have an override and is already using defaults.", allowedMentions: { repliedUser: (replying === "true") }});
+    if (!key) return message.reply({ content: "Please specify a key to reset."});
+    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings"});
+    if (!overrides[key]) return message.reply({ content: "This key does not have an override and is already using defaults."});
     
     // Good demonstration of the custom awaitReply method in `./modules/functions.js` !
     const response = await awaitReply(message, `Are you sure you want to reset ${key} to the default value?`);
@@ -64,19 +63,19 @@ exports.run = async (client, message, [action, key, ...value], level) => { // es
     if (["y", "yes"].includes(response.toLowerCase())) {
       // We delete the `key` here.
       await settings.delete(message.guild.id, key);
-      message.reply({ content: `${key} was successfully reset to default.`, allowedMentions: { repliedUser: (replying === "true") }});
+      message.reply({ content: `${key} was successfully reset to default.`});
     } else
     // If they respond with n or no, we inform them that the action has been cancelled.
     if (["n","no","cancel"].includes(response)) {
-      message.reply({ content: `Your setting for \`${key}\` remains at \`${serverSettings[key]}\``, allowedMentions: { repliedUser: (replying === "true") }});
+      message.reply({ content: `Your setting for \`${key}\` remains at \`${serverSettings[key]}\``});
     }
   } else
   
   if (action === "get") {
-    if (!key) return message.reply({ content: "Please specify a key to view", allowedMentions: { repliedUser: (replying === "true") }});
-    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings", allowedMentions: { repliedUser: (replying === "true") }});
+    if (!key) return message.reply({ content: "Please specify a key to view"});
+    if (!defaults[key]) return message.reply({ content: "This key does not exist in the settings"});
     const isDefault = !overrides[key] ? "\nThis is the default global default value." : "";
-    message.reply({ content: `The value of ${key} is currently ${serverSettings[key]}${isDefault}`, allowedMentions: { repliedUser: (replying === "true") }});
+    message.reply({ content: `The value of ${key} is currently ${serverSettings[key]}${isDefault}`});
   } else {
     // Otherwise, the default action is to return the whole configuration;
     const array = [];

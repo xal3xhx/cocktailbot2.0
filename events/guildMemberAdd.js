@@ -13,5 +13,5 @@ module.exports = async (client, member) => {
 
   // Send the welcome message to the welcome channel
   // There's a place for more configs here.
-  member.guild.channels.cache.find(c => c.name === settings.WelcomeChannel).send(welcomeMessage).catch(console.error);
+  member.guild.channels.cache.find(c => c.id === settings.WelcomeChannelID).send(welcomeMessage).catch(console.error);
 };

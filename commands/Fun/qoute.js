@@ -4,7 +4,7 @@ const { fetchMore } = require("../../modules/functions.js");
 exports.run = async (client, message, args, level) => {
     const settings = message.settings;
     // get all messages in channel "864285781081325568"
-    const channel = await message.guild.channels.cache.get("864285781081325568");
+    const channel = await message.guild.channels.cache.get(message.settings.QouteChannelID);
     // send a message to the channel to let them know the bot is working
     // wait 3 seconds then delete the message
     await message.channel.send("processing messages...").then(msg => {
@@ -14,7 +14,6 @@ exports.run = async (client, message, args, level) => {
     });
     const messages = await fetchMore(channel, 5000);
     const countMention = messages.filter(m => m.content.includes("<@")).size;
-    console.log(`countMention: ${countMention}`);
     // count all mentions for each user
     const mentions = messages.reduce((acc, m) => {
         const user = m.mentions.users.first();
@@ -43,7 +42,7 @@ exports.run = async (client, message, args, level) => {
     exports.conf = {
         enabled: true,
         guildOnly: true,
-        aliases: [],
+        aliases: ["qoutes"],
         permLevel: "user"
       };
       

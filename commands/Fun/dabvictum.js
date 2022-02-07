@@ -1,7 +1,7 @@
 exports.run = async (client, message, args, level) => {
 	await message.guild.members.fetch()
   const settings = message.settings;
-  let users = Array.from(await message.guild.roles.cache.get('852660279544381480').members.map(m=>m.user)).sort(() => .5 - Math.random()).slice(0,2)
+  let users = Array.from(await message.guild.roles.cache.get(settings.VictumRoleID).members.map(m=>m.user)).sort(() => .5 - Math.random()).slice(0,2)
   let victums = ""
 
   for (var key in users) {
