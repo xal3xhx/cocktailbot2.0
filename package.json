@@ -9,7 +9,7 @@
 		"colorette": "1.4.0",
 		"discord-music-player": "8.2.0",
 		"discord.js": "13.3.0",
-		"dotenv": "10.0.0",
+		"dotenv": "16.0.0",
 		"enmap": "5.8.7",
 		"ffmpeg-static": "4.4.0",
 		"imgur": "1.0.2",
