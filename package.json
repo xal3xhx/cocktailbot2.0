@@ -12,7 +12,7 @@
 		"dotenv": "16.0.0",
 		"enmap": "5.8.7",
 		"ffmpeg-static": "4.4.1",
-		"imgur": "1.0.2",
+		"imgur": "2.1.4",
 		"mysql2": "2.3.3",
 		"log4js": "6.4.1"
 	}
