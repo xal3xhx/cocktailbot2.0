@@ -17,7 +17,7 @@
 		"log4js": "6.3.0"
 	},
 	"devDependencies": {
-		"eslint": "7.32.0",
+		"eslint": "8.8.0",
 		"eslint-config-airbnb-base": "14.2.1",
 		"eslint-config-standard": "16.0.3",
 		"eslint-plugin-import": "2.25.4",
