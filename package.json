@@ -14,7 +14,7 @@
 		"ffmpeg-static": "4.4.0",
 		"imgur": "1.0.2",
 		"mysql2": "2.3.2",
-		"log4js": "6.3.0"
+		"log4js": "6.4.1"
 	},
 	"devDependencies": {
 		"eslint": "7.32.0",
