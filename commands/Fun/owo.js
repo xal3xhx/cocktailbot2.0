@@ -22,5 +22,7 @@ exports.help = {
   name: "owo",
   category: "Fun",
   description: "replys with owo text",
-  usage: "owo <text>"
+  usage: `
+  owo <text>
+  `
 };

@@ -1,6 +1,6 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 
-exports.run = (client, message, args, level) => {
+exports.run = async (client, message, args, level) => {
   // Grab the container from the client to reduce line length.
   const { container } = client;
 
@@ -95,11 +95,6 @@ exports.run = (client, message, args, level) => {
 
     // Load the command again, since it may have changed while awaiting a message.
     const thisCommand = container.commands.get(command) || container.aliases.get(command);
-
-    // create a discord message row
-    const messageActionRow1 = new MessageActionRow()
-	const messageActionRow2 = new MessageActionRow()
-	const messageActionRow3 = new MessageActionRow()
 
     // Create a better embed for the command help.
     const embed = new MessageEmbed()

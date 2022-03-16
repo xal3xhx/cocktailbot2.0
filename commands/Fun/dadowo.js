@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const owoify = require('owoify-js').default
 
 exports.run = async (client, message, args, level) => {
   // get https://icanhazdadjoke.com/ as plain text
@@ -8,21 +9,21 @@ exports.run = async (client, message, args, level) => {
     }
   }).then(res => res.text());
   // reply with the joke
-  message.reply(joke);
+  message.reply(owoify(joke));
   };
 
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: ["djoke", "dadjoke"],
+  aliases: ["djokeowo", "owodadjoke", "dadjokeowo"],
   permLevel: "User"
 };
 
 exports.help = {
-  name: "dad",
+  name: "dadowo",
   category: "Fun",
-  description: "get a random dad joke.",
+  description: "get a random owo dad joke.",
   usage: `
-  dad
+  dadowo
   `
 };

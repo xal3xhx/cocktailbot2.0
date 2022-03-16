@@ -17,5 +17,7 @@ exports.help = {
   name: "lmgtfy",
   category: "Fun",
   description: "posts a link to lmgtfy",
-  usage: "lmgtfy <google search>"
+  usage: `
+  lmgtfy <text>
+  `
 };

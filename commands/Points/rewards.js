@@ -1,5 +1,5 @@
 const {getRewards, addReward, removeReward} = require('../../modules/rewardsbackend.js');
-const {addRewardReaction, removeRewardReaction} = require('../../modules/reactionbackend.js');
+const {addRewardReaction, removeRewardReaction, getRewardMessage} = require('../../modules/reactionbackend.js');
 
 exports.run = async (client, message, args, level) => {
     await message.guild.members.fetch()
@@ -57,8 +57,8 @@ exports.run = async (client, message, args, level) => {
         if (reward) rewardString = `${cost} ${pointsname} for: **${reward}**`;
         else rewardString = `${cost} ${pointsname}`;
 
-        // send a message with the cost and reward
-        var rewardmessage = await message.channel.send(rewardString);
+        // send a message to the rewards chat with the cost and reward
+        var rewardmessage = await message.guild.channels.cache.get(message.settings.rewardChannelID).send(rewardString);
 
         // add a reaction to database
         await addRewardReaction(reward, message.guild.id, rewardmessage.id);
@@ -80,13 +80,14 @@ exports.run = async (client, message, args, level) => {
         // remove the reward from the database
         var reward = args.slice(1).join(' ');
         var server_id = message.guild.id;
-        var messageid = await getRewards(server_id, reward);
+        var messageid = await getRewardMessage(reward, server_id);
         await removeReward(reward, server_id);
         await removeRewardReaction(reward, server_id);
 
         // remove the messageid
+        console.log(messageid);
         var messageToDelete = await message.channel.messages.fetch(messageid);
-        await messageToDelete.delete();
+        messageToDelete.delete();
 
         // remove original message
         await message.delete();
@@ -106,7 +107,11 @@ exports.conf = {
   exports.help = {
     name: "rewards",
     category: "Points",
-    description: "redeem points for rewards",
-    usage: "rewards [add/remove/generate]"
+    description: "admin controls for rewards",
+    usage: `
+    rewards add <cost> <reward> - adds a reward to the database
+    rewards remove <reward> - removes a reward from the database
+    rewards generate - generates a message for each reward in the database
+    `
   };
   

@@ -14,5 +14,7 @@ exports.help = {
   name: "say",
   category: "Fun",
   description: "makes the bot say something",
-  usage: "say <message>"
+  usage: `
+  say <text>
+  `
 };

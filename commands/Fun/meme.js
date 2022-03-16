@@ -37,5 +37,7 @@ exports.help = {
   name: "meme",
   category: "Fun",
   description: "shows a random meme",
-  usage: "meme"
+  usage: `
+  meme
+  `
 };

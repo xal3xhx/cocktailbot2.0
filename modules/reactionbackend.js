@@ -120,4 +120,20 @@ async function removeRewardReaction(reward, server_id) {
     })
 }
 
-module.exports = {checkRewardReaction, addRewardReaction, removeRewardReaction, checkRollReaction, addRollReaction, removeRollReaction };
+// function to return the message id of a reward reaction
+async function getRewardMessage(reward, server_id) {
+    return new Promise( (resolve,reject) => {
+        var result = connection.query(`SELECT message_id FROM RewardReactions WHERE reward = "${reward}" AND server_id = ${server_id}`,(err, results, fields) =>{
+            if(err){
+                reject(err);
+            }
+            if(results.length > 0){
+                resolve(results[0].message_id);
+            } else {
+                resolve(false);
+            }
+        })
+    })
+}
+
+module.exports = {checkRewardReaction, addRewardReaction, removeRewardReaction, checkRollReaction, addRollReaction, removeRollReaction, getRewardMessage};

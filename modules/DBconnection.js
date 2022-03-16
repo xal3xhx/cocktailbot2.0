@@ -15,7 +15,6 @@ var pool = mysql.createPool(db_config);
 
 pool.getConnection(function(err, con) {
     if (err) {
-     connection.release();
      console.log(' Error getting mysql_pool connection: ' + err);
      throw err;
     }

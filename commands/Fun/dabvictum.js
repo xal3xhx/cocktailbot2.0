@@ -28,5 +28,7 @@ exports.help = {
   name: "dabvictum",
   category: "Fun",
   description: "picks the dab victums for this week.",
-  usage: "dabvictum"
+  usage: `
+  dabvictum
+  `
 };

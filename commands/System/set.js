@@ -88,7 +88,7 @@ ${array.join("\n")}`));
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: false,
   guildOnly: true,
   aliases: [],
   permLevel: "Bot Admin"
@@ -98,5 +98,9 @@ exports.help = {
   name: "set",
   category: "System",
   description: "View or change settings for your server.",
-  usage: "set <view/get/edit> <key> <value>"
+  usage: `
+    set view <key> - View the current value of a setting.
+    set edit <key> <value> - Change the value of a setting.
+    set del <key> - Delete a setting, reverting it to the default.
+  `
 };

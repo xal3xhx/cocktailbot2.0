@@ -41,5 +41,7 @@ exports.help = {
   name: "bonk",
   category: "Fun",
   description: "bonk the horny.",
-  usage: "bonk"
+  usage: `
+  bonk [user]
+  `
 };
