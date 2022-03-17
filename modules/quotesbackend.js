@@ -1,4 +1,5 @@
 var connection = require('./DBconnection.js');
+const crypto = require("crypto");
 
 // create a table if it doesn't exist
 // table name: quotes
@@ -6,7 +7,7 @@ var connection = require('./DBconnection.js');
 // primary key: quote_id
 connection.query(`
     CREATE TABLE IF NOT EXISTS quotes (
-        quote_id INT NOT NULL AUTO_INCREMENT,
+        quote_id VARCHAR(32) NOT NULL,
         user_id VARCHAR(1000) NOT NULL,
         quote VARCHAR(1000) NOT NULL,
         server_id VARCHAR(1000) NOT NULL,
@@ -20,14 +21,15 @@ connection.query(`
 // args: user_id, quote, server_id
 // retirns: quote_id
 function addQuote(user_id, quote, server_id) {
+    let id = crypto.randomBytes(4).toString("hex");
     return new Promise((resolve, reject) => {
         connection.query(`
-            INSERT INTO quotes (user_id, quote, server_id)
-            VALUES (?, ?, ?)
-        `, [user_id, quote, server_id], (err, res) => {
+            INSERT INTO quotes (quote_id, user_id, quote, server_id)
+            VALUES (?, ?, ?, ?)
+        `, [id, user_id, quote, server_id], (err, res) => {
             if (err) reject(err);
             try {
-                resolve(res.insertId);
+                resolve(id);
             }
             catch (err) {
                 reject(err);
