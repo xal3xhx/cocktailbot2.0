@@ -16,16 +16,103 @@ connection.query(`
 
 // create a table if it doesn't exist
 // table name: RewardReactions
-// columns: reward, server_id, message_id
+// columns: reward_id, server_id, message_id
 connection.query(`
     CREATE TABLE IF NOT EXISTS RewardReactions (
-    reward VARCHAR(255) NOT NULL,
+    reward_id VARCHAR(255) NOT NULL,
     server_id VARCHAR(255) NOT NULL,
     message_id VARCHAR(255) NOT NULL,
-    PRIMARY KEY (reward, server_id)
+    PRIMARY KEY (reward_id, server_id)
     )`, (err, results, fields) => {
     if (err) throw err;
 });
+
+// function to add a Reward reaction to the table
+async function addRewardReaction(reward_id, server_id, message_id) {
+    return new Promise((resolve, reject) => {
+        connection.query(`
+            INSERT INTO RewardReactions (reward_id, server_id, message_id)
+            VALUES (?, ?, ?)
+        `, [reward_id, server_id, message_id], (err, res) => {
+            if (err) reject(err);
+            try {
+                resolve(res);
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    });
+}
+
+// function to remove a Reward reaction from the table by reward id
+async function removeRewardReaction(reward_id, server_id) {
+    return new Promise((resolve, reject) => {
+        connection.query(`
+            DELETE FROM RewardReactions
+            WHERE reward_id = ? AND server_id = ?`, [reward_id, server_id], (err, res) => {
+            if (err) reject(err);
+            try {
+                resolve(res);
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    });
+}
+
+// get reward reaction by message id
+async function getRewardReaction(message_id, server_id) {
+    return new Promise((resolve, reject) => {
+        connection.query(`
+            SELECT * FROM RewardReactions
+            WHERE message_id = ? AND server_id = ?`, [message_id, server_id], (err, res) => {
+            if (err) reject(err);
+            try {
+                resolve(res[0]);
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    });
+}
+
+// get reward reaction by reward id
+async function getRewardByID(reward_id, server_id) {
+    return new Promise((resolve, reject) => {
+        connection.query(`
+            SELECT * FROM RewardReactions
+            WHERE reward_id = ? AND server_id = ?`, [reward_id, server_id], (err, res) => {
+            if (err) reject(err);
+            try {
+                resolve(res[0]);
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    });
+}
+
+// function to get all reward reactions from the table
+async function getAllRewardReactions(server_id) {
+    return new Promise((resolve, reject) => {
+        connection.query(`
+            SELECT * FROM RewardReactions
+            WHERE server_id = ?`, [server_id], (err, res) => {
+            if (err) reject(err);
+            try {
+                resolve(res);
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    });
+}
+
 
 // write a function to check if a Roll reaction is in the table and message id matches
 // if it is return the role id
@@ -35,7 +122,6 @@ async function checkRollReaction(emoji, server_id, message_id) {
     return new Promise( (resolve,reject) => {
         var result = connection.query(`SELECT * FROM RollReactions WHERE emoji = "${emoji}" AND server_id = ${server_id} AND message_id = ${message_id}`,(err, results, fields) =>{
             if(err){
-                console.log(`Error: ${err}`);
                 reject(err);
             }
             if(results.length > 0){
@@ -76,64 +162,4 @@ async function removeRollReaction(emoji, role_id, server_id, message_id) {
     })
 }
 
-// function to check if a Reward reaction is in the table and message id matches
-// if it is return the reward name
-// if it isn't return false
-async function checkRewardReaction(server_id, message_id) {
-    return new Promise( (resolve,reject) => {
-        var result = connection.query(`SELECT * FROM RewardReactions WHERE server_id = ${server_id} AND message_id = ${message_id}`,(err, results, fields) =>{
-            if(err){
-                console.log(`Error: ${err}`);
-                reject(err);
-            }
-            if(results.length > 0){
-                resolve(results[0].reward);
-            } else {
-                resolve(false);
-            }
-        })
-    })
-}
-
-// function to add a Reward reaction to the table
-// on duplicate key update the message id
-async function addRewardReaction(reward, server_id, message_id) {
-    return new Promise( (resolve,reject) => {
-        var result = connection.query(`INSERT INTO RewardReactions (reward, server_id, message_id) VALUES ("${reward}", ${server_id}, ${message_id}) ON DUPLICATE KEY UPDATE message_id = ${message_id}`,(err, results, fields) =>{
-            if(err){
-                reject(err);
-            }
-            resolve(true);
-        })
-    })
-}
-
-// function to remove a Reward reaction from the table
-async function removeRewardReaction(reward, server_id) {
-    return new Promise( (resolve,reject) => {
-        var result = connection.query(`DELETE FROM RewardReactions WHERE reward = "${reward}" AND server_id = ${server_id}`,(err, results, fields) =>{
-            if(err){
-                reject(err);
-            }
-            resolve(true);
-        })
-    })
-}
-
-// function to return the message id of a reward reaction
-async function getRewardMessage(reward, server_id) {
-    return new Promise( (resolve,reject) => {
-        var result = connection.query(`SELECT message_id FROM RewardReactions WHERE reward = "${reward}" AND server_id = ${server_id}`,(err, results, fields) =>{
-            if(err){
-                reject(err);
-            }
-            if(results.length > 0){
-                resolve(results[0].message_id);
-            } else {
-                resolve(false);
-            }
-        })
-    })
-}
-
-module.exports = {checkRewardReaction, addRewardReaction, removeRewardReaction, checkRollReaction, addRollReaction, removeRollReaction, getRewardMessage};
+module.exports = { getRewardByID, addRollReaction, removeRollReaction, checkRollReaction, addRewardReaction, removeRewardReaction, getRewardReaction, getAllRewardReactions };

@@ -1,5 +1,6 @@
-const {getRewards, addReward, removeReward} = require('../../modules/rewardsbackend.js');
-const {addRewardReaction, removeRewardReaction, getRewardMessage} = require('../../modules/reactionbackend.js');
+const { addReward, removeReward, getAllRewards } = require('../../modules/rewardsbackend.js');
+const { addRewardReaction, removeRewardReaction, getRewardByID } = require('../../modules/reactionbackend.js');
+const Discord = require("discord.js");
 
 exports.run = async (client, message, args, level) => {
     await message.guild.members.fetch()
@@ -9,12 +10,13 @@ exports.run = async (client, message, args, level) => {
     // if args[0] is generate, send a separate message for each reward and add a reaction to each message
     if (args[0] === 'generate') {
         // get all rewards for the server
-        var rewards = await getRewards(message.guild.id);
+        var rewards = await getAllRewards(message.guild.id);
         if (rewards.length === 0) return await message.channel.send(`${message.author}, there are no rewards for this server.`);
 
         // loop through each reward
         for (var i = 0; i < rewards.length; i++) {
             // create a string of the cost and reward
+            var reward_id = rewards[i].reward_id;
             var cost = rewards[i].cost;
             var reward = rewards[i].reward;
             var rewardString = '';
@@ -24,7 +26,7 @@ exports.run = async (client, message, args, level) => {
             var rewardmessage = await message.channel.send(rewardString);
 
             // add a reaction to database
-            await addRewardReaction(reward, message.guild.id, rewardmessage.id);
+            await addRewardReaction(reward_id, message.guild.id, rewardmessage.id);
 
             // add a checkmark reaction to the message
             await rewardmessage.react('✅');
@@ -50,18 +52,20 @@ exports.run = async (client, message, args, level) => {
         var reward = args.slice(2).join(' ');
         var cost = args[1];
         var server_id = message.guild.id;
-        await addReward(cost, server_id, `"${reward}"`);
+        var reward_id = await addReward(cost, reward, server_id);
 
-        // create a string of the cost and reward
-        var rewardString = '';
-        if (reward) rewardString = `${cost} ${pointsname} for: **${reward}**`;
-        else rewardString = `${cost} ${pointsname}`;
-
+        // create an embed
+        var embed = new Discord.MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle(reward)
+            .setDescription(`*${cost} ${pointsname}*`)
+            .setFooter(`UID: ${reward_id}`);
+        
         // send a message to the rewards chat with the cost and reward
-        var rewardmessage = await message.guild.channels.cache.get(message.settings.rewardChannelID).send(rewardString);
+        var rewardmessage = await message.channel.send({ embeds: [embed] });
 
         // add a reaction to database
-        await addRewardReaction(reward, message.guild.id, rewardmessage.id);
+        await addRewardReaction(reward_id, message.guild.id, rewardmessage.id);
 
         // add a checkmark reaction to the message
         await rewardmessage.react('✅');
@@ -78,16 +82,17 @@ exports.run = async (client, message, args, level) => {
         if (!args[1]) return message.channel.send(`${message.author}, please enter a reward.`);
 
         // remove the reward from the database
-        var reward = args.slice(1).join(' ');
+        var reward_id = args.slice(1).join(' ');
         var server_id = message.guild.id;
-        var messageid = await getRewardMessage(reward, server_id);
-        await removeReward(reward, server_id);
-        await removeRewardReaction(reward, server_id);
+        var message_id = await getRewardByID(reward_id, server_id);
+        message_id = message_id.message_id;
+        await removeReward(reward_id, server_id);
+        await removeRewardReaction(reward_id, server_id);
 
-        // remove the messageid
-        console.log(messageid);
-        var messageToDelete = await message.channel.messages.fetch(messageid);
-        messageToDelete.delete();
+        // remove the message
+        
+        var messageToDelete = await message.guild.channels.cache.find(channel => channel.id === message.settings.rewardChannelID).messages.fetch(message_id);
+        await messageToDelete.delete();
 
         // remove original message
         await message.delete();

@@ -13,7 +13,6 @@ exports.run = async (client, message, args, level) => {
         const user = message.mentions.users.first();
         const quote = args.slice(2).join(" ");
         let quote_id = await addQuote(user.id, quote, message.guild.id);
-        console.log(quote_id);
         // sends an embed with the quote
         const embed = new Discord.MessageEmbed()
                 .setColor("RANDOM")
@@ -95,7 +94,7 @@ exports.run = async (client, message, args, level) => {
             .setColor("RANDOM")
             .setTitle(`${user.username} said:`)
             .setDescription(owoify(rquote.quote))
-            .setFooter(`Quote ID: ${rquote.quote_id}`);
+            .setFooter(`UID: ${rquote.quote_id}`);
         return message.channel.send({ embeds: [embed] });
 }
 
