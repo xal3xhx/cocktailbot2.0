@@ -1,25 +1,23 @@
+const { fetchMore } = require("../../modules/functions.js");
+
 exports.run = async (client, message, args, level) => {
 
+// clear messages without using bulkdelete
+if(!args[0]) return message.channel.send('Please provide a number of messages to clear.');
+if(isNaN(args[0])) return message.channel.send('Please provide a number of messages to clear.');
+message.delete();
+const messages = await fetchMore(message.channel, args[0]);
+// for each mesage in the array, delete it, wait .5 seconds, then delete the next one
+messages.forEach(async (message) => {
+    setTimeout(() => {
+        message.delete();
+    }, 1300);
+});
+// send a message saying that the messages were deleted
+let finished = await message.channel.send(`${args[0]} messages were deleted.`);
+// after 5 seconds delete the message
+setTimeout(() => finished.delete(), 5000);
 
-// clear all messages from a channel
-    if (!args[0]) {
-        return message.reply("You have to specify how many messages you want to delete.");
-    }
-    if (isNaN(args[0])) {
-        return message.reply("You have to specify how many messages you want to delete.");
-    }
-    if (args[0] > 100) {
-        return message.reply("You cannot delete more than 100 messages at once.");
-    }
-    if (args[0] == 0) {
-        return message.reply("You cannot delete 0 messages.");
-    }
-    if (args[0] < 0) {
-        return message.reply("You cannot delete a negative amount of messages.");
-    }
-    message.channel.bulkDelete(args[0]);
-    message.channel.send(`Deleted ${args[0]} messages.`);
-  
 };
 
 exports.conf = {

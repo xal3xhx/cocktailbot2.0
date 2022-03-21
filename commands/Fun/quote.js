@@ -110,7 +110,7 @@ exports.run = async (client, message, args, level) => {
                 .setColor("RANDOM")
                 .setTitle(`${user.username} said:`)
                 .setDescription(quotes[i].quote)
-                .setFooter(`Quote ID: ${quotes[i].quote_id}`);
+                .setFooter(`UID: ${quotes[i].quote_id}`);
             message.channel.send({ embeds: [embed] });
         }
     }
