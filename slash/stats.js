@@ -1,5 +1,5 @@
 const { version } = require("discord.js");
-const { codeBlock } = require("@discordjs/builders");
+const { codeBlock, SlashCommandBuilder } = require("@discordjs/builders");
 const { DurationFormatter } = require("@sapphire/time-utilities");
 const durationFormatter = new DurationFormatter();
 
@@ -16,12 +16,11 @@ exports.run = async (client, interaction) => { // eslint-disable-line no-unused-
   await interaction.reply(stats);
 };
 
-exports.commandData = {
-  name: "stats",
-  description: "Show's the bots stats.",
-  options: [],
-  defaultPermission: true,
-};
+exports.commandData = new SlashCommandBuilder()
+    .setName('stats')
+    .setDescription('shows current stats of the bot.')
+    .setDefaultPermission(true)
+    .toJSON()
 
 // Set this to false if you want it to be global.
 exports.guildOnly = true;

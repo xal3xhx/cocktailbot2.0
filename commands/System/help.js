@@ -106,7 +106,6 @@ exports.run = async (client, message, args, level) => {
       .addField('Permission Level', thisCommand.conf.permLevel, true);
 
     // send the message action row with the text "Help Menu"
-	console.log(embed);
 	message.reply({ content: 'Help Menu!', embeds: [embed] });
   }
 };

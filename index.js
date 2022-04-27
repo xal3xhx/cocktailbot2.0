@@ -11,7 +11,6 @@ const { readdirSync, statSync } = require("fs");
 const path = require("path")
 const { intents, partials, permLevels } = require("./config.js");
 const logger = require("./modules/Logger.js");
-const { buttonHandler } = require("./modules/functions.js");
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're referring to. Your client.
@@ -78,9 +77,9 @@ const init = async () => {
   }
 
   // Now we load any **slash** commands you may have in the ./slash directory.
-  const slashFiles = getAllFiles("./slash").filter(file => file.endsWith(".js"));
+  const slashFiles = readdirSync("./slash").filter(file => file.endsWith(".js"));
   for (const file of slashFiles) {
-    const command = require(`./${file}`);
+    const command = require(`./slash/${file}`);
     const commandName = file.split(".")[0];
     logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
     
@@ -99,12 +98,6 @@ const init = async () => {
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, event.bind(null, client));
   }
-
-  // create an event listener for messages interactions then call buttonhandler from functions
-  client.on('interactionCreate', interaction => {
-    if (!interaction.isButton()) return;
-    buttonHandler(client, interaction);
-  });
 
   // Threads are currently in BETA.
   // This event will fire when a thread is created, if you want to expand

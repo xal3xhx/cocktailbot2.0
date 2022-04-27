@@ -1,54 +1,52 @@
 const logger = require("./Logger.js");
 const config = require("../config.js");
 const settings = require("./settings.js");
-const { codeBlock } = require("@discordjs/builders");
 const { Collection } = require('discord.js');
-const wait = require('util').promisify(setTimeout);
+const request = require('request');
+const Promise = require('bluebird');
+const url = require('url');
 
-// Let's start by getting some useful functions that we'll use throughout
-// the bot, like logs and elevation features.
-
-
-// Button interaction handler
-// used to edit interaction with the correct help commands
-async function buttonHandler(client, interaction) {
-  const { container } = client;
-  // get users permlevel
-  const level = permlevel(interaction.member)
-  const settings = await getSettings(interaction.guild);
-  // Filter all commands by which are available for the user's level, using the <Collection>.filter() method.
-  const myCommands = await interaction.guild ? container.commands.filter(cmd => container.levelCache[cmd.conf.permLevel] <= level) :
-    await container.commands.filter(cmd => container.levelCache[cmd.conf.permLevel] <= level && cmd.conf.guildOnly !== true);
-  // Then we will filter the myCommands collection again to get the enabled commands.
-  const enabledCommands = await myCommands.filter(cmd => cmd.conf.enabled);
-  // Here we have to get the command names only, and we use that array to get the longest name.
-  const commandNames = [...enabledCommands.keys()];
-
-  // This make the help commands "aligned" in the output.
-  const longest = await commandNames.reduce((long, str) => Math.max(long, str.length), 0);
-
- // get the commands for the category interaction.customid
-  const commands = await enabledCommands.filter(cmd => cmd.help.category === interaction.customId);
-  // get the description for the category interaction.customid
-  // const description = await commands.reduce((desc, cmd) => desc + `${cmd.help.name}${' '.repeat(longest - cmd.help.name.length)} :: ${cmd.help.description}\n`, "");
-  let output = "";
-
-  commands.forEach( c => {
-    output += `${settings.Prefix}${c.help.name}${" ".repeat(longest - c.help.name.length)} :: ${c.help.description}\n`;
+// makes a get request to the given url with the given data
+async function get(options){
+  return new Promise(function(resolve, reject) {
+    request.get(options, function(error, response, body){
+        if (!error && response.statusCode == 200) {
+            resolve({response, body});
+        } else {
+            if (response) {
+                // return a status code to help with diagnosing api failures
+                reject({error, body, 'statusCode':response.statusCode});
+            } else {
+                reject({error, body});
+            }
+        }
+    });
   });
+}
 
-  const helpMsg = `= ${interaction.customId} commands =\n\n`;
-  const endMsg = `\n[Use ${settings.Prefix}help <commandname> for details]`;
+// makes a post request to the given url with the given data
+async function post(options) {
+  return new Promise(function(resolve, reject) {
+    request.post(options, function(error, response, body) {
+        if (!error && response.statusCode < 300) resolve({error, response, body});
+        else reject({error, body});
+    });
+  });
+}
 
-  const finalstring = helpMsg + codeBlock("asciidoc", output) + endMsg;
-  
-  // edit the interaction with the new message
-  // after 5 seconds, reset the interaction to the original message
+// generates a proprely formatted url
+async function getURL(host, port, ssl, args) {
+  return url.parse(`${(ssl === 'true') ? 'https://' : 'http://'}` +
+        `${(host.match(/^http(s)?:\/\//)) ? host.split('//')[1] : host}` +
+        `${(port) ? `:${port}` : ''}` +
+        `${args}`).href;
+}
 
-  await interaction.deferUpdate();
-  await interaction.editReply(finalstring);
-  // await wait(5000);
-  // await interaction.editReply(interaction.content);
+
+async function replacePlaceholders(str, placerholders) {
+  return str.replace(/%\w+%/g, (all) => {
+    return placerholders[all] || all;
+  }); 
 }
 /*
   PERMISSION LEVEL FUNCTION
@@ -184,4 +182,4 @@ process.on("unhandledRejection", err => {
   console.error(err);
 });
 
-module.exports = { getSettings, permlevel, awaitReply, toProperCase, buttonHandler, fetchMore };
+module.exports = { get, post, getURL, getSettings, permlevel, awaitReply, toProperCase, fetchMore };
