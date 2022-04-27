@@ -3,18 +3,22 @@
 		"node": ">=16"
 	},
 	"dependencies": {
-		"@discordjs/builders": "0.12.0",
+		"@discordjs/builders": "0.13.0",
 		"@sapphire/time-utilities": "1.7.4",
 		"colorette": "2.0.16",
 		"discord-music-player": "8.3.2",
 		"discord.js": "13.6.0",
 		"dotenv": "16.0.0",
-		"imgur": "2.1.4",
+		"imgur": "2.2.0",
 		"mysql2": "2.3.3",
+<<<<<<< HEAD
 		"bluebird": "3.7.2",
 		"request": "2.88.0",
 		"url": "0.11.0",
 		"log4js": "6.4.4",
+=======
+		"log4js": "6.4.6",
+>>>>>>> adda710559cb92d2ea833d5acd79842d118f4794
 		"owoify-js": "1.0.7"
 	}
 }
