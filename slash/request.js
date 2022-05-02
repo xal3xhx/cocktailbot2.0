@@ -45,16 +45,7 @@ exports.run = async (client, interaction) => { // eslint-disable-line no-unused-
             .setName('query')
             .setDescription('the movie to request')
             .setRequired(true)))
-    // .addSubcommand(subcommand =>
-    //   subcommand
-    //     .setName('series')
-    //     .setDescription('requests a series')
-    //     .addStringOption(option =>
-    //       option
-    //         .setName('query')
-    //         .setDescription('the series to request')
-    //         .setRequired(true)))
     .toJSON()
 
 // Set this to false if you want it to be global.
-  exports.guildOnly = true;
+  exports.guildOnly = false;

@@ -2,35 +2,29 @@ const Discord = require("discord.js");
 
 exports.run = async (client, message, args, level) => {
   // array of links for take/give dice
-  const typeLink = [
-    'http://ided.online/discord/give.gif',
-    'http://ided.online/discord/take.gif',
-  ]
-  // array of links for number dice
-  const modifierLink = [
-    'http://ided.online/discord/1shot.gif',
-    'http://ided.online/discord/2shot.gif',
-    'http://ided.online/discord/3shot.gif',
-  ]
+  const dice = {
+    "give1": "https://img.skal.bar/discord/Give_One.gif",
+    "give2": "https://img.skal.bar/discord/Give_Two.gif",
+    "give3": "https://img.skal.bar/discord/Give_Three.gif",
+    "take1": "https://img.skal.bar/discord/Take_One.gif",
+    "take2": "https://img.skal.bar/discord/Take_Two.gif",
+    "take3": "https://img.skal.bar/discord/Take_Three.gif",
 
-  // pick a random typelink and modifierlink
-  const type = typeLink[Math.floor(Math.random() * typeLink.length)]
-  const modifier = modifierLink[Math.floor(Math.random() * modifierLink.length)]
+  }
 
-  // send an embed with the 2 links
-  const embed1 = new Discord.MessageEmbed()
-    .setColor('RANDOM')
-    .setTitle('Dice Roll')
-    .setDescription(`${message.author} rolled there first dice as`)
-    .setImage(type)
-  
-  const embed2 = new Discord.MessageEmbed()
-    .setColor('RANDOM')
-    .setTitle('Dice Roll')
-    .setDescription(`${message.author} rolled their second dice as`)
-    .setImage(modifier)
-  await message.channel.send({ embeds: [embed1] });
-  await message.channel.send({ embeds: [embed2] });
+  // randomize the 2d array
+  const diceRoll = Object.keys(dice).sort(() => Math.random() - 0.5);
+  // pick a random dice from the array
+  const rdice = diceRoll[Math.floor(Math.random() * diceRoll.length)];
+
+
+  // send an embed with the dice roll
+  const embed = new Discord.MessageEmbed()
+  .setColor("RANDOM")
+  .setTitle('Drinking Dice')
+  .setDescription(`${message.author} rolled,`)
+  .setImage(dice[rdice])
+  await message.channel.send({ embeds: [embed] });
 };
 
 exports.conf = {

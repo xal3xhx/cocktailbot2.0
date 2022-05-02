@@ -2,6 +2,20 @@ const logger = require("../modules/Logger.js");
 const { permlevel, getSettings } = require("../modules/functions.js");
 const { addMovie } = require("../modules/radarrapi.js");
 const { codeBlock } = require("@discordjs/builders");
+const { getPathByID } = require("../modules/embyapi.js");
+const { VLC } = require('node-vlc-http');
+
+const host = process.env.VLC_HOST;
+    const port = process.env.VLC_PORT;
+    const username = process.env.VLC_USERNAME;
+    const password = process.env.VLC_PASSWORD;
+
+const vlc = new VLC({
+    host: host,
+    port: port,
+    username: '',
+    password: password
+    });
 
 module.exports = async (client, interaction) => {
   if (interaction.isButton()) {
@@ -68,9 +82,17 @@ module.exports = async (client, interaction) => {
     }
   }
   if (interaction.isSelectMenu()) {
+    if (interaction.customId === 'player') {
+      if(parseInt(interaction.values[0]) === 0) return interaction.message.delete();
+      let path = await getPathByID(interaction.values);
+      path = path.replace('/Media/Movies Sorted/', '');
+      path = `file:///z:/Movies Sorted/${path}`;
+
+      await interaction.update({ content: `playing!`, components: [] });
+      vlc.addToQueueAndPlay(path);
+    }
     if (interaction.customId === 'select') {
       const data = JSON.parse(interaction.values)
-      // console.log(interaction);
       if(data === false) return interaction.message.delete();
       if(data.monitored == "true") return interaction.update({ content: `movie ***${data.title}*** already exists!`, components: [] });
       await interaction.update({ content: `movie ***${data.title}*** requested!`, components: [] });
