@@ -19,11 +19,18 @@ exports.run = async (client, interaction) => { // eslint-disable-line no-unused-
       })
     // for each movie, add an option
     movies.forEach(movie => {
+      let val = `{ "id": "${movie.tmdbId}", "title": "${movie.title}","monitored": "${movie.monitored}" }`
+      if(val.length > 100) {
+        length = val.length
+        let title = movie.title
+        title = title.substring(0, title.length - (length - 100) - 3) + '...'
+        val = `{ "id": "${movie.tmdbId}", "title": "${title}","monitored": "${movie.monitored}" }`
+      }
       menu.addOptions(
         {
           label: movie.title,
           description: `${movie.overview.substring(0, 95)}...`,
-          value: `{ "id": "${movie.tmdbId}", "title": "${movie.title}","monitored": "${movie.monitored}" }`,
+          value: val,
         }
       )
     });
