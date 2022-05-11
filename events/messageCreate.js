@@ -45,6 +45,7 @@ module.exports = async (client, message) => {
   const cmd = container.commands.get(command) || container.commands.get(container.aliases.get(command));
   // using this const varName = thing OR otherThing; is a pretty efficient
   // and clean way to grab one of 2 values!
+  
   if (!cmd) return;
 
   // Some commands may not be useable in DMs. This check prevents those commands from running

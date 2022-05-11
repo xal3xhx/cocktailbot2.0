@@ -17,7 +17,7 @@ const vlc = new VLC({
     password: password
     });
 
-module.exports = async (client, interaction) => {
+module.exports = async (client, interaction) => {  
   if (interaction.isButton()) {
     const { container } = client;
     // get users permlevel
@@ -46,7 +46,6 @@ module.exports = async (client, interaction) => {
 
     const helpMsg = `= ${interaction.customId} commands =\n\n`;
     const endMsg = `\n[Use ${settings.Prefix}help <commandname> for details]`;
-
     const finalstring = helpMsg + codeBlock("asciidoc", output) + endMsg;
     
     // edit the interaction with the new message
@@ -63,6 +62,9 @@ module.exports = async (client, interaction) => {
     // If that command doesn't exist, silently exit and do nothing
     if (!cmd) return;
     // Run the command
+    if(cmd.conf.GuildLock && interaction.guild.id !== cmd.conf.GuildLock){
+      return interaction.reply(`This command is locked to the ${cmd.conf.GuildLock} guild.`);
+    }
     try {
       await cmd.run(client, interaction);
       logger.log(`${interaction.user.id} ran slash command ${interaction.commandName}`, "cmd");

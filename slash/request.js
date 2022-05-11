@@ -55,4 +55,7 @@ exports.run = async (client, interaction) => { // eslint-disable-line no-unused-
     .toJSON()
 
 // Set this to false if you want it to be global.
-  exports.guildOnly = false;
+exports.conf = {
+  permLevel: "User",
+  guildOnly: false
+};

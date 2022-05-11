@@ -23,4 +23,7 @@ exports.commandData = new SlashCommandBuilder()
     .toJSON()
 
 // Set this to false if you want it to be global.
-exports.guildOnly = true;
+exports.conf = {
+  permLevel: "User",
+  guildOnly: false
+};
