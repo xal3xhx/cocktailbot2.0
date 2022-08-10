@@ -60,7 +60,6 @@ const init = async () => {
       arrayOfFiles.push(path.join(dirPath, "/", file))
     }
   })
-
   return arrayOfFiles
 }
 
@@ -98,6 +97,16 @@ const init = async () => {
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, event.bind(null, client));
   }
+
+  // every friday at 1200 run the command dabdrawing
+  const schedule = require('node-schedule');
+  schedule.scheduleJob('0 12 * * 5', () => {
+    // create a variable that fakes a message sent from the guild 823247015206846494
+    const demo = {
+      guild: client.guilds.cache.get('823247015206846494')
+    };
+    client.container.commands.get("dabvictum").run(client, demo)
+  });
 
   // Threads are currently in BETA.
   // This event will fire when a thread is created, if you want to expand
