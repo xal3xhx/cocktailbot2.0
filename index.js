@@ -98,11 +98,30 @@ const init = async () => {
     client.on(eventName, event.bind(null, client));
   }
 
+
   // every friday at 1200 run the command dabdrawing
   const schedule = require('node-schedule');
   schedule.scheduleJob('0 12 * * 5', () => {
     // create a variable that fakes a message sent from the guild 823247015206846494
     const demo = {
+      settings: {
+          Prefix: '~',
+          CocktailChannelID: '840334813906337882',
+          HornyjailChannelID: '841058244075192330',
+          EventChannelID: '824742922641473587',
+          tokensChannelID: '922645027736395857',
+          rewardChannelID: '922645050243027054',
+          QouteChannelID: '953682835053633626',
+          WelcomeChannelID: '840331748093329408',
+          VictumRoleID: '852660279544381480',
+          BonkerRoleID: '841066087772323851',
+          PartyPlannerRoleID: '825065786199769119',
+          WelcomeMessage: 'Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D',
+          PointsName: 'points',
+          WelcomeEnabled: 'false',
+          BonkEnabled: 'true',
+          PointsEnabled: 'true'
+        },
       guild: client.guilds.cache.get('823247015206846494')
     };
     client.container.commands.get("dabvictum").run(client, demo)
