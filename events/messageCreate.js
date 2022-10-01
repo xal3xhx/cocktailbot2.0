@@ -1,7 +1,7 @@
 const logger = require("../modules/Logger.js");
 const { getSettings, permlevel } = require("../modules/functions.js");
 const config = require("../config.js");
-
+const { messageCollector } = require("../Stats/Pusher.js");
 // The MESSAGE event runs anytime a message is received
 // Note that due to the binding of client to every event, every event
 // goes `client, other, args` when this function is run.
@@ -12,6 +12,10 @@ module.exports = async (client, message) => {
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop (we call that "botception").
   if (message.author.bot) return;
+
+
+  // send message to stats collector
+  await messageCollector(message);
 
   // Grab the settings for this server from Enmap.
   // If there is no guild, get default conf (DMs)

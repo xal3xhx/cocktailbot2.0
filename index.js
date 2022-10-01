@@ -11,6 +11,7 @@ const { readdirSync, statSync } = require("fs");
 const path = require("path")
 const { intents, partials, permLevels } = require("./config.js");
 const logger = require("./modules/Logger.js");
+const { counterCheker, pingCollector } = require("./Stats/Pusher.js");
 // This is your client. Some people call it `bot`, some people call it `self`,
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're referring to. Your client.
@@ -20,12 +21,15 @@ const { Player } = require("discord-music-player");
 const player = new Player(client);
 client.player = player;
 
+
+
 // Aliases, commands and slash commands are put in collections where they can be
 // read from, catalogued, listed, etc.
 const commands = new Collection();
 const aliases = new Collection();
 const slashcmds = new Collection();
 
+require("./Stats/Pusher.js");
 // Generate a cache of client permissions for pretty perm names in commands.
 const levelCache = {};
 for (let i = 0; i < permLevels.length; i++) {
@@ -36,6 +40,8 @@ for (let i = 0; i < permLevels.length; i++) {
 // To reduce client pollution we'll create a single container property
 // that we can attach everything we need to.
 client.container = {
+  voice_time: new Map(),
+  stream_time: new Map(),
   commands,
   aliases,
   slashcmds,
@@ -98,6 +104,11 @@ const init = async () => {
     client.on(eventName, event.bind(null, client));
   }
 
+  // every 10 seconds, get the websocket ping and rest ping and send it to the pusher
+  setInterval(() => {
+    pingCollector(client.ws.ping, 999);
+    counterCheker(client);
+  }, 1000);
 
   // every friday at 1200 run the command dabdrawing
   const schedule = require('node-schedule');

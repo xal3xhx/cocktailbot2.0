@@ -3,6 +3,7 @@ const { getSettings } = require("../modules/functions.js");
 const {getReward} = require('../modules/rewardsbackend.js');
 const { addRollReaction, removeRollReaction, checkRollReaction, addRewardReaction, removeRewardReaction, getRewardReaction, getAllRewardReactions } = require("../modules/reactionbackend.js");
 const {getPoints, removePoints } = require("../modules/pointsbackend.js");
+const { reactionCollector } = require('../Stats/Pusher.js')
 
 module.exports = async (client, reaction, user) => {
   const settings = await getSettings(reaction.message.guild);
@@ -19,6 +20,11 @@ module.exports = async (client, reaction, user) => {
       return;
     }
   }
+
+
+
+
+ await reactionCollector(reaction, user);
 
   // if checkReaction returns true set the users role to the role that is associated with the emoji
   const reactionrole = await checkRollReaction(reaction.emoji.name, reaction.message.guild.id, reaction.message.id);
@@ -57,4 +63,6 @@ module.exports = async (client, reaction, user) => {
       }
     }
   }
+
+
 };

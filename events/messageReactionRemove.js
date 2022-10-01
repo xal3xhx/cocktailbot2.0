@@ -1,6 +1,5 @@
 const logger = require("../modules/Logger.js");
 const { getSettings } = require("../modules/functions.js");
-
 const {checkRollReaction } = require("../modules/reactionbackend.js");
 
 module.exports = async (client, reaction, user) => {
@@ -18,6 +17,7 @@ module.exports = async (client, reaction, user) => {
       return;
     }
   }
+
 
   // if checkReaction returns true set the users role to the role that is associated with the emoji
   const reactionrole = await checkRollReaction(reaction.emoji.name, reaction.message.guild.id, reaction.message.id);
