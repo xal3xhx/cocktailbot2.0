@@ -1,7 +1,7 @@
 // import needed modules
 const prom = require('prom-client');
 const express = require('express');
-const { get } = require('http');
+const fetch = require('node-fetch');
 const app = express();
 
 
@@ -12,6 +12,7 @@ const tags_names = [ "guild", "channel", "channelName", "user", "name" ];
 const track_names = true;
 const prefix = "author_"
 collectDefaultMetrics({ register });
+
 
 // msg_count = Counter.build().name(prefix + "msg_count").help("Count of messages").labelNames(track_names ? tags_names : tags_default).register();
 const msg_count = new prom.Counter({
@@ -49,7 +50,7 @@ const msg_word_count = new prom.Gauge({
 const toxicityScore = new prom.Gauge({
     name: prefix + "toxicity_score",
     help: "ToxicityScore of a message",
-    labelNames: track_names ? tags_names : tags_default,
+    labelNames: track_names ? [ "guild", "channel", "channelName", "user", "name", "message" ] : [ "guild", "channel", "user", "message" ],
     registers: [register]
 });
 
@@ -97,7 +98,7 @@ const member_online = new prom.Gauge({
 const voice_time = new prom.Gauge({
     name: prefix + "voice_time",
     help: "Time spent in a voice channel",
-    labelNames: [ "guild", "channel", "user" ],
+    labelNames: [ "guild", "channel", "user", "name" ],
     registers: [register]
 });
 
@@ -105,7 +106,7 @@ const voice_time = new prom.Gauge({
 const stream_time = new prom.Gauge({
     name: prefix + "stream_time",
     help: "Time spent streaming",
-    labelNames: [ "guild", "channel", "user" ],
+    labelNames: [ "guild", "channel", "user", "name" ],
     registers: [register]
 });
 
@@ -149,10 +150,10 @@ const discord_ping_rest = new prom.Gauge({
 
 
 // Create a registry and pull default metrics
-app.get('/metrics', async (req, res) => {
-    res.setHeader('Content-Type', register.contentType);
-    res.send(await register.metrics());
-});
+app.get('/metrics', (req,res) => {
+    res.setHeader('Content-Type',register.contentType)
+    register.metrics().then(data => res.send(data));
+})
 
 // Start the server to expose the metrics.
 // 0.0.0.0:3001/metrics
@@ -183,6 +184,7 @@ async function messageCollector(message) {
     let user_name = message.author.username;
     let word_count = message.content.split(" ").length;
     let character_count = message.content.length;
+    let content = message.content;
 
 // event.getMessage().getEmotesBag().forEach
     let emotes = message.content.match(/<:.+?:\d+>/g);
@@ -200,7 +202,8 @@ async function messageCollector(message) {
         "user_name": user_name,
         "word_count": word_count,
         "character_count": character_count,
-        "emote_count": emote_count
+        "emote_count": emote_count,
+        "content": content
     };
 
     recordMessageCount(data);
@@ -254,14 +257,14 @@ async function counterCheker(client) {
         let guild = value.guild_id;
         let channel = value.channel_id;
             let time = Math.floor((Date.now() - value.time) / 1000);
-            voice_time.labels(guild, channel, user.id).set(time);
+            voice_time.labels(guild, channel, user.id, user.username).set(time);
     }
     for (const [key, value] of stream_time_map) {
         let user = client.users.cache.find(user => user.id === key);
         let guild = value.guild_id;
         let channel = value.channel_id;
         let time = Math.floor((Date.now() - value.time) / 1000);
-        stream_time.labels(guild, channel, user.id).set(time);
+        stream_time.labels(guild, channel, user.id, user.username).set(time);
     }
 
 
@@ -319,12 +322,16 @@ async function recordToxicityScore(message) {
             }
         })
     };
-    const request = new Request("https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=" + process.env.PERSPECTIVE_KEY, requestBody);
+    const response = await fetch(`https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=${process.env.PERSPECTIVE_KEY}`, requestBody);
     try {
-        const response = await fetch(request);
         const json = await response.json();
         const value = json.attributeScores.TOXICITY.summaryScore.value;
-        toxicityScore.labels(message.guild.id, message.channel.id, message.author.id).set(value);
+        if (track_names) {
+            toxicityScore.labels(message.guild.id, message.channel.id, message.channel.name, message.author.id, message.author.username, message.content).set(value);
+        }
+        else {
+            toxicityScore.labels(message.guild.id, message.channel.id, message.author.id, message.content).set(value);
+        }
     } catch (exception) {
         console.log(exception);
     }
