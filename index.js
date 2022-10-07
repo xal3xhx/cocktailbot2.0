@@ -16,10 +16,10 @@ const { counterCheker, pingCollector } = require("./Stats/Pusher.js");
 // some might call it `cootchie`. Either way, when you see `client.something`,
 // or `bot.something`, this is what we're referring to. Your client.
 const client = new Client({ intents, partials });
-const { Player } = require("discord-music-player");
+// const { Player } = require("discord-music-player");
 
-const player = new Player(client);
-client.player = player;
+// const player = new Player(client);
+// client.player = player;
 
 
 

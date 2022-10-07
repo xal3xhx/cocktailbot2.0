@@ -1,5 +1,4 @@
-const { Intents } = require("discord.js");
-
+const { GatewayIntentBits, Partials } = require("discord.js");
 const config = {
   // Bot Admins, level 9 by default. Array of user ID strings.
   "admins": [],
@@ -8,12 +7,20 @@ const config = {
   "support": [],
 
   // Intents the bot needs.
-  // By default GuideBot needs Guilds, Guild Messages and Direct Messages to work.
-  // For join messages to work you need Guild Members, which is privileged and requires extra setup.
-  // For more info about intents see the README.
-  intents: [ Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS ],
+
+  intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildMessageTyping,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildPresences,
+	],
+
   // Partials your bot may need should go here, CHANNEL is required for DM's
-  partials: ['MESSAGE', 'USER', 'CHANNEL', 'REACTION'],
+  partials: [Partials.Message, Partials.User, Partials.Channel, Partials.Reaction],
 
   // Default per-server settings. These settings are entered in a database on first load, 
   // And are then completely ignored from this file. To modify default settings, use the `conf` command.
@@ -48,14 +55,38 @@ const config = {
       // level allows them to.
       check: () => true
     },
+    { level: 5,
+      name: "bonker",
+      check: (message) => {
+        try {
+          const bonker = message.guild.roles.cache.find(r => r.id === message.settings.BonkerRoleID);
+          if (bonker && message.member.roles.cache.has(bonker.id)) return true;
+        } catch (e) {
+          return false;
+        }
+      }
+    },
+    { level: 8,
+      name: "Party Planner", 
+      // Simple check, if the guild owner id matches the message author's ID, then it will return true.
+      // Otherwise it will return false.
+      check: (message) => {
+        try {
+          const Planner = message.guild.roles.cache.find(r => r.id === message.settings.PartyPlannerRoleID);
+          if (Planner && message.member.roles.cache.has(Planner.id)) return true;
+        } catch (e) {
+          return false;
+        }
+      }
+    },
     { level: 15,
       name: "Server Owner", 
       // Simple check, if the guild owner id matches the message author's ID, then it will return true.
       // Otherwise it will return false.
       check: (message) => {
         // try message.user.id first, then message.author.id
-        if(message.author) return message.author.id === message.guild.ownerID;
-        else if (message.user) return message.user.id === message.guild.ownerID;
+        if(message.author) return message.author.id === message.guild.ownerId;
+        else if (message.user) return message.user.id === message.guild.ownerId;
         else return false;
       }
     },
