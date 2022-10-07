@@ -3,8 +3,6 @@ const prom = require('prom-client');
 const express = require('express');
 const fetch = require('node-fetch');
 const app = express();
-
-
 const register = new prom.Registry();
 const collectDefaultMetrics = prom.collectDefaultMetrics;
 const tags_default = [ "guild", "channel", "user" ];
@@ -147,13 +145,13 @@ const discord_ping_rest = new prom.Gauge({
     registers: [register]
 });
 
+app.get('/metrics', async (req, res) => {
+    register.metrics().then((data) => {
+        res.set('Content-Type', register.contentType);
+        res.end(data);
+    });
+});
 
-
-// Create a registry and pull default metrics
-app.get('/metrics', (req,res) => {
-    res.setHeader('Content-Type',register.contentType)
-    register.metrics().then(data => res.send(data));
-})
 
 // Start the server to expose the metrics.
 // 0.0.0.0:3001/metrics
