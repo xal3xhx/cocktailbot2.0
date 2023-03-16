@@ -4,7 +4,7 @@
 	},
 	"dependencies": {
 		"@discordjs/builders": "1.5.0",
-		"@sapphire/time-utilities": "1.7.8",
+		"@sapphire/time-utilities": "1.7.9",
 		"colorette": "2.0.19",
 		"discord-music-player": "9.1.1",
 		"discord.js": "14.8.0",
