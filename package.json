@@ -3,7 +3,7 @@
 		"node": ">=16"
 	},
 	"dependencies": {
-		"@discordjs/builders": "1.5.0",
+		"@discordjs/builders": "1.6.1",
 		"@sapphire/time-utilities": "1.7.9",
 		"colorette": "2.0.19",
 		"discord-music-player": "9.1.1",
