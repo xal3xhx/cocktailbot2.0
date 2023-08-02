@@ -7,7 +7,7 @@
 		"@sapphire/time-utilities": "1.7.10",
 		"colorette": "2.0.20",
 		"discord-music-player": "9.1.1",
-		"discord.js": "14.11.0",
+		"discord.js": "14.12.1",
 		"dotenv": "16.3.1",
 		"imgur": "2.3.0",
 		"mysql2": "3.5.2",
