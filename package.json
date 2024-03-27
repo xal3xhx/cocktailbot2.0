@@ -18,7 +18,7 @@
 		"owoify-js": "2.0.0",
 		"node-vlc-http": "1.2.0",
 		"node-schedule": "2.1.1",
-		"prom-client": "15.1.0",
+		"prom-client": "15.1.1",
 		"express": "4.19.2"
 	}
 }
