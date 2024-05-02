@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { addDrink } = require("../../modules/drinksbackend.js");
 const { awaitReply } = require("../../modules/functions.js");
 const imgur = require('imgur');
@@ -34,7 +34,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
 
   ingredients = JSON.stringify(ingredients);
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
       .setAuthor(name)
       .setColor("RED")
       .setImage(image)

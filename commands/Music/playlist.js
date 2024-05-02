@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
 exports.run = async (client, message, args, level) => { // eslint-disable-line no-unused-vars
   let queue = client.player.createQueue(message.guild.id);
@@ -7,7 +7,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   
   await queue.join(message.member.voice.channel);
   let song = await queue.playlist(args.join(' '))
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
         .setAuthor(`${message.guild.name} - Queue`, message.guild.iconURL())
         .setColor("#0099ff")
         .setDescription(`Playlist ${song.name} has been added to the queue.`)

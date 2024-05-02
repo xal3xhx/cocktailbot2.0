@@ -1,5 +1,5 @@
 const {getPoints, addPoints, removePoints, getTop10} = require('../../modules/pointsbackend.js');
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
 exports.run = async (client, message, args, level) => {
     await message.guild.members.fetch()
@@ -67,7 +67,7 @@ exports.run = async (client, message, args, level) => {
             let user = await client.users.fetch(top[i].user_id);
             topUsers.push(`${user.username} - ${top[i].points}`);
         }
-        let topEmbed = new MessageEmbed()
+        let topEmbed = new EmbedBuilder()
             .setTitle('Top 10 Users')
             .setDescription(topUsers.join('\n'))
             .setColor(0x00AE86);

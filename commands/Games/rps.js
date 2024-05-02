@@ -18,7 +18,7 @@ exports.run = async (client, message, args, level) => {
   // compare to the users choice
   // rock beats scissors, scissors beats paper, paper beats rock
   if (args[0] === 'rock' && rpsPick === 'scissors' || args[0] === 'scissors' && rpsPick === 'paper' || args[0] === 'paper' && rpsPick === 'rock') {
-    const embed = new Discord.MessageEmbed()
+    const embed = new Discord.EmbedBuilder()
     .setColor("GREEN")
     .setTitle(`${message.author.username} picked ${args[0]}`)
     .setDescription(`the bot picked ${rpsPick}, ${message.author} wins!`)
@@ -26,7 +26,7 @@ exports.run = async (client, message, args, level) => {
     await message.channel.send({ embeds: [embed] });
   }
   else if (args[0] === 'rock' && rpsPick === 'paper' || args[0] === 'scissors' && rpsPick === 'rock' || args[0] === 'paper' && rpsPick === 'scissors') {
-    const embed = new Discord.MessageEmbed()
+    const embed = new Discord.EmbedBuilder()
     .setColor("RED")
     .setTitle(`${message.author.username} picked ${args[0]}`)
     .setDescription(`the bot picked ${rpsPick}, ${message.author} looses!`)
@@ -34,7 +34,7 @@ exports.run = async (client, message, args, level) => {
     await message.channel.send({ embeds: [embed] });
   }
   else if (args[0] === 'rock' && rpsPick === 'rock' || args[0] === 'scissors' && rpsPick === 'scissors' || args[0] === 'paper' && rpsPick === 'paper') {
-    const embed = new Discord.MessageEmbed()
+    const embed = new Discord.EmbedBuilder()
     .setColor("YELLOW")
     .setTitle(`${message.author.username} picked ${args[0]}`)
     .setDescription(`the bot picked ${rpsPick}, ${message.author} ties!`)

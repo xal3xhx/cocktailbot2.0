@@ -19,7 +19,7 @@ exports.run = async (client, message, args, level) => {
 
 
   // send an embed with the dice roll
-  const embed = new Discord.MessageEmbed()
+  const embed = new Discord.EmbedBuilder()
   .setColor("RANDOM")
   .setTitle('Drinking Dice')
   .setDescription(`${message.author} rolled,`)

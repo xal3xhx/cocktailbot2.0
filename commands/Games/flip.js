@@ -29,14 +29,14 @@ exports.run = async (client, message, args, level) => {
 
   // if the user guesses red
   if (args[0] === 'heads' && heads.includes(rflip) || args[0] === 'tails' && tails.includes(rflip)) {
-      const embed = new Discord.MessageEmbed()
+      const embed = new Discord.EmbedBuilder()
       .setColor("GREEN")
       .setTitle('coin flip')
       .setDescription(`${message.author} Guessed Correctly, give away 1 drink!`)
       .setImage(rflip)
       await message.channel.send({ embeds: [embed] });
   } else if (args[0] === 'heads' && !heads.includes(rflip) || args[0] === 'tails' && !tails.includes(rflip)) {
-      const embed = new Discord.MessageEmbed()
+      const embed = new Discord.EmbedBuilder()
       .setColor("RED")
       .setTitle('coin flip')
       .setDescription(`${message.author} Guessed Incorrectly, take 1 drink!`)

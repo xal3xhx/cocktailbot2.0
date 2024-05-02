@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require("discord.js");
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { searchMovie } = require("../modules/radarrapi.js");
 

@@ -1,4 +1,5 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle } = require('discord.js');
+const logger = require("../../modules/Logger.js");
 
 exports.run = async (client, message, args, level) => {
   // Grab the container from the client to reduce line length.
@@ -12,7 +13,7 @@ exports.run = async (client, message, args, level) => {
     // Filter all commands by which are available for the user's level, using the <Collection>.filter() method.
     const myCommands = message.guild ? container.commands.filter(cmd => container.levelCache[cmd.conf.permLevel] <= level) :
       container.commands.filter(cmd => container.levelCache[cmd.conf.permLevel] <= level && cmd.conf.guildOnly !== true);
-
+    
     // Then we will filter the myCommands collection again to get the enabled commands.
     const enabledCommands = myCommands.filter(cmd => cmd.conf.enabled);
 
@@ -27,9 +28,9 @@ exports.run = async (client, message, args, level) => {
     const sorted = enabledCommands.sort((p, c) => p.help.category > c.help.category ? 1 : p.help.name > c.help.name && p.help.category === c.help.category ? 1 : -1 );
 
       // create a discord message row
-    const messageActionRow1 = new MessageActionRow()
-	const messageActionRow2 = new MessageActionRow()
-	const messageActionRow3 = new MessageActionRow()
+    const messageActionRow1 = new ActionRowBuilder()
+	  const messageActionRow2 = new ActionRowBuilder()
+	  const messageActionRow3 = new ActionRowBuilder()
 
 
       // loop through the sorted commands and print out the categorie name
@@ -45,28 +46,28 @@ exports.run = async (client, message, args, level) => {
 		  if (count <= 5) {
 			//   console.log(currentCategory);
 			messageActionRow1.addComponents(
-				new MessageButton()
+				new ButtonBuilder()
 				  .setCustomId(c.help.category)
 				  .setLabel(c.help.category)
-				  .setStyle('PRIMARY'),
+				  .setStyle(ButtonStyle.Primary),
 			  );
 		  }
 		  // if count is 6-10, add to the second row
 		  else if (count > 5 && count <= 10) {
 			messageActionRow2.addComponents(
-				new MessageButton()
+				new ButtonBuilder()
 				  .setCustomId(c.help.category)
 				  .setLabel(c.help.category)
-				  .setStyle('PRIMARY'),
+				  .setStyle(ButtonStyle.Primary),
 			  );
 		  }
 		  // if count is 11-15, add to the third row
 		  else if (count > 10 && count <= 15) {
 			messageActionRow3.addComponents(
-				new MessageButton()
+				new ButtonBuilder()
 				  .setCustomId(c.help.category)
 				  .setLabel(c.help.category)
-				  .setStyle('PRIMARY'),
+				  .setStyle(ButtonStyle.Primary),
 			  );
 		  }  
       }
@@ -97,13 +98,15 @@ exports.run = async (client, message, args, level) => {
     const thisCommand = container.commands.get(command) || container.aliases.get(command);
 
     // Create a better embed for the command help.
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle(`Help for: ${thisCommand.help.name}`)
       .setColor(0x00AE86)
-      .addField('Description', thisCommand.help.description, true)
-      .addField('Usage', thisCommand.help.usage, true)
-      .addField('Aliases', thisCommand.conf.aliases.join(', ') || 'None', true)
-      .addField('Permission Level', thisCommand.conf.permLevel, true);
+      .addFields([
+        {name: 'Description', value: thisCommand.help.description, inline: true },
+        {name: 'Usage', value: thisCommand.help.usage, inline: true },
+        {name: 'Aliases', value: thisCommand.conf.aliases.join(', ') || 'None', inline: true },
+        {name: 'Permission Level', value: thisCommand.conf.permLevel, inline: true }
+      ]);
 
     // send the message action row with the text "Help Menu"
 	message.reply({ content: 'Help Menu!', embeds: [embed] });

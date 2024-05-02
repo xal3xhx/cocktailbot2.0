@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require("discord.js");
 
 exports.run = async (client, interaction) => { // eslint-disable-line no-unused-vars
     await interaction.deferReply();

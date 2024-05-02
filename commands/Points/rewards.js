@@ -55,7 +55,7 @@ exports.run = async (client, message, args, level) => {
         var reward_id = await addReward(cost, reward, server_id);
 
         // create an embed
-        var embed = new Discord.MessageEmbed()
+        var embed = new Discord.EmbedBuilder()
             .setColor('#0099ff')
             .setTitle(reward)
             .setDescription(`*${cost} ${pointsname}*`)

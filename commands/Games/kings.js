@@ -44,7 +44,7 @@ const rules = {
   const image = cards[card];
 
   // send an embed with the card and rule
-  const embed = new Discord.MessageEmbed()
+  const embed = new Discord.EmbedBuilder()
     .setColor('RANDOM')
     .setTitle('Kings cup')
     .setDescription(`${message.author} has drawn a ${card}`)

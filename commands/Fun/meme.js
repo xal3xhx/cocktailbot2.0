@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const Discord = require("discord.js");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
 exports.run = async (client, message, args, level) => {
   // fetch https://www.reddit.com/r/memes/random/.json
@@ -16,12 +16,12 @@ exports.run = async (client, message, args, level) => {
   const memeUpvotes = post.ups;
   const memeNumComments = post.num_comments;
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setTitle(`${memeTitle}`)
     .setURL(`${memeUrl}`)
-    .setImage(memeImage)
-    .setColor('RANDOM')
-    .setFooter(`👍 ${memeUpvotes} 💬 ${memeNumComments}`);
+    .setImage(`${memeImage}`)
+    .setColor("Random")
+    .setFooter({ text: `👍 ${memeUpvotes} 💬 ${memeNumComments}`});
 
       // send the embed
       await message.channel.send({ embeds: [embed] });

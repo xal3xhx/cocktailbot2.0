@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { topdrinks } = require("../../modules/drinksbackend.js");
 const logger = require("../../modules/Logger.js");
 
@@ -9,7 +9,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
 
   if (!results[0]) return await message.channel.send(`there are no drinks found for this server.`)
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
   embed.setColor("RED")
   embed.setImage("https://i.imgur.com/hKxdqF0.png")
   

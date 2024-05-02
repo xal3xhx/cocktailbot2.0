@@ -14,7 +14,7 @@ exports.run = async (client, message, args, level) => {
         const quote = args.slice(2).join(" ");
         let quote_id = await addQuote(user.id, quote, message.guild.id);
         // sends an embed with the quote
-        const embed = new Discord.MessageEmbed()
+        const embed = new Discord.EmbedBuilder()
                 .setColor("RANDOM")
                 .setTitle(`${user.username} said:`)
                 .setDescription(quote)
@@ -56,7 +56,7 @@ exports.run = async (client, message, args, level) => {
             return b.quote_count - a.quote_count;
         }).slice(0, 10);
         // send an embed with the top 10 users
-        const topUsersEmbed = new Discord.MessageEmbed()
+        const topUsersEmbed = new Discord.EmbedBuilder()
             .setTitle("Top 10 Quoted Users")
             .setColor("RANDOM")
             .setTimestamp()
@@ -76,7 +76,7 @@ exports.run = async (client, message, args, level) => {
             if(!rquote) return message.channel.send("There are no quotes in this server.");
             rquote = rquote[0];
             const user = await client.users.cache.find(user => user.id === rquote.user_id);
-            const embed = new Discord.MessageEmbed()
+            const embed = new Discord.EmbedBuilder()
                 .setColor("RANDOM")
                 .setTitle(`${user.username} said:`)
                 .setDescription(rquote.quote)
@@ -90,7 +90,7 @@ exports.run = async (client, message, args, level) => {
         if(!rquote) return message.channel.send("There are no quotes in this server.");
         rquote = rquote[0];
         const user = await client.users.cache.find(user => user.id === rquote.user_id);
-        const embed = new Discord.MessageEmbed()
+        const embed = new Discord.EmbedBuilder()
             .setColor("RANDOM")
             .setTitle(`${user.username} said:`)
             .setDescription(owoify(rquote.quote))
@@ -106,7 +106,7 @@ exports.run = async (client, message, args, level) => {
         const embeds = [];
         for(let i = 0; i < quotes.length; i++) {
             const user = await client.users.cache.find(user => user.id === quotes[i].user_id);
-            const embed = new Discord.MessageEmbed()
+            const embed = new Discord.EmbedBuilder()
                 .setColor("RANDOM")
                 .setTitle(`${user.username} said:`)
                 .setDescription(quotes[i].quote)

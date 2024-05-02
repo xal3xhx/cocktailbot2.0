@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { topdrinksany } = require("../../modules/drinksbackend.js");
 const logger = require("../../modules/Logger.js");
 
@@ -7,7 +7,7 @@ exports.run = async (client, message, args, level) => { // eslint-disable-line n
   .then(results =>{return results})
   .catch(error => {logger.error(error)});
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
   embed.setColor("RED")
   embed.setImage("https://i.imgur.com/hKxdqF0.png")
 

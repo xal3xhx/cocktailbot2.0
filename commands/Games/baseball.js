@@ -72,14 +72,14 @@ exports.run = async (client, message, args, level) => {
 
     // if the user guesses red
     if (args[0] === 'red' && redCards.includes(card) || args[0] === 'black' && blackCards.includes(card)) {
-        const embed = new Discord.MessageEmbed()
+        const embed = new Discord.EmbedBuilder()
         .setColor("GREEN")
         .setTitle('baseball cards')
         .setDescription(`${message.author} Guessed Correctly, give away 1 drink!`)
         .setImage(card)
         await message.channel.send({ embeds: [embed] });
     } else if (args[0] === 'red' && !redCards.includes(card) || args[0] === 'black' && !blackCards.includes(card)) {
-        const embed = new Discord.MessageEmbed()
+        const embed = new Discord.EmbedBuilder()
         .setColor("RED")
         .setTitle('baseball cards')
         .setDescription(`${message.author} Guessed Incorrectly, take 1 drink!`)

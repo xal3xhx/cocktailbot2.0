@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { fetchalldrinks, updateMessageID } = require("../../modules/drinksbackend.js");
 const logger = require("../../modules/Logger.js");
 
@@ -17,7 +17,7 @@ for (i in results) {
   var instructions = results[i].instructions
   var message_id = results[i].message_id
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
       .setAuthor(name)
       .setColor("RED")
       .setImage(image)
