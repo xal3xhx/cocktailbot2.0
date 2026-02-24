@@ -13,7 +13,7 @@
 		"express": "5.2.1",
 		"imgur": "2.5.0",
 		"log4js": "6.9.1",
-		"mysql2": "3.17.4",
+		"mysql2": "3.18.0",
 		"node-schedule": "2.1.1",
 		"node-vlc-http": "1.2.0",
 		"owoify-js": "2.0.0",
