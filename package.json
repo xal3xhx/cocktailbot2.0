@@ -11,7 +11,7 @@
 		"discord.js": "14.26.4",
 		"dotenv": "17.4.2",
 		"express": "5.2.1",
-		"imgur": "2.5.0",
+		"imgur": "2.6.0",
 		"log4js": "6.9.1",
 		"mysql2": "3.22.5",
 		"node-schedule": "2.1.1",
