@@ -9,7 +9,7 @@
 		"colorette": "2.0.20",
 		"discord-music-player": "9.1.1",
 		"discord.js": "14.27.0",
-		"dotenv": "18.0.0",
+		"dotenv": "18.0.1",
 		"express": "5.2.1",
 		"imgur": "2.6.1",
 		"log4js": "6.9.1",
